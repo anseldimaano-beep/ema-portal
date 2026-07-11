@@ -21,6 +21,6 @@ RUN mkdir -p /app/logs
 # Collect static files
 RUN python backend/manage.py collectstatic --noinput
 
-# Run migrations and start server with gunicorn (production-grade WSGI server)
+# Run migrations, create/update admin user, and start server with gunicorn (production-grade WSGI server)
 # Render (and most PaaS hosts) inject a $PORT env var at runtime; default to 8000 for local/docker-compose use
-CMD ["sh", "-c", "python backend/manage.py migrate && cd backend && gunicorn ema_emits.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3"]
+CMD ["sh", "-c", "python backend/manage.py migrate && python backend/manage.py create_admin && cd backend && gunicorn ema_emits.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3"]

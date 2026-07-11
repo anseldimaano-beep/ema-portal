@@ -1,0 +1,3 @@
+import React from 'react';
+const EnrollmentStatus = () => <div className="card"><h3 className="font-bold mb-4">Enrollment Status</h3><div className="space-y-3"><div className="flex justify-between"><span>Status</span><span className="text-green-600 font-medium">Enrolled</span></div><div className="flex justify-between"><span>Semester</span><span>1st Sem 2026-2027</span></div><div className="flex justify-between"><span>Year Level</span><span>3rd Year</span></div></div></div>;
+export default EnrollmentStatus;

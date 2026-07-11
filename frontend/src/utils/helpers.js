@@ -1,0 +1,1 @@
+export const formatDate=(d)=>new Date(d).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'});export const formatTime=(t)=>new Date('2000-01-01T'+t).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});

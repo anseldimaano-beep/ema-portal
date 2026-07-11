@@ -1,0 +1,9 @@
+﻿frontend/node_modules/
+frontend/build/
+venv/
+__pycache__/
+*.pyc
+backend/staticfiles/
+.env
+.vscode/
+.DS_Store

@@ -1,0 +1,1 @@
+import{useState,useEffect}from'react';import axios from'axios';export const useApi=(url)=>{const[data,setData]=useState(null);const[loading,setLoading]=useState(true);const[error,setError]=useState(null);useEffect(()=>{axios.get(url).then(r=>setData(r.data)).catch(e=>setError(e)).finally(()=>setLoading(false));},[url]);return{data,loading,error};};

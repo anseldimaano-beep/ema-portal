@@ -5,6 +5,10 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import PortalPlaceholder from './pages/PortalPlaceholder';
 import Home from './pages/Home';
+import About from './pages/About';
+import Academics from './pages/Academics';
+import ProgramDetail from './pages/ProgramDetail';
+import Faculty from './pages/Faculty';
 import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
 import StudentPortal from './pages/StudentPortal';
@@ -28,6 +32,10 @@ const Layout = () => {
       {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/academics" element={<Academics />} />
+        <Route path="/academics/:slug" element={<ProgramDetail />} />
+        <Route path="/faculty" element={<Faculty />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/contact" element={<Contact />} />

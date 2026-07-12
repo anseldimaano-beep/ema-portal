@@ -32,9 +32,6 @@ export const YEAR_LEVEL_OPTIONS = [
   { value: 4, label: '4th Year' },
 ];
 
-// College identity / external links, shown on the login screen and sidebar.
-// Update COLLEGE_WEBSITE_URL and COLLEGE_FACEBOOK_URL to the school's real
-// public site once it's live.
+// College identity, shown on the login screen and sidebar.
 export const COLLEGE_NAME = 'EMA EMITS College';
-export const COLLEGE_WEBSITE_URL = 'https://www.emaemits.edu.ph';
 export const COLLEGE_FACEBOOK_URL = 'https://www.facebook.com/emaemits';

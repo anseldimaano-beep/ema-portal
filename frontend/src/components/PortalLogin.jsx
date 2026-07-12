@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff } from 'lucide-react';
 import logo from '../assets/logo.png';
-import { COLLEGE_NAME, COLLEGE_WEBSITE_URL, COLLEGE_FACEBOOK_URL } from '../utils/constants';
+import { COLLEGE_NAME, COLLEGE_FACEBOOK_URL } from '../utils/constants';
 
 // Full-screen, split login matching the reference school-portal design:
 // left panel = announcements + quick links, right panel = the sign-in card.
@@ -52,19 +52,15 @@ const PortalLogin = ({ announcement }) => {
               Facebook Page
             </a>
           )}
-          {COLLEGE_WEBSITE_URL && (
-            <a
-              href={COLLEGE_WEBSITE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-col items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
-            >
-              <span className="h-16 w-16 rounded-full bg-white shadow flex items-center justify-center text-2xl">
-                🌐
-              </span>
-              College Website
-            </a>
-          )}
+          <Link
+            to="/"
+            className="flex flex-col items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+          >
+            <span className="h-16 w-16 rounded-full bg-white shadow flex items-center justify-center text-2xl">
+              🏠
+            </span>
+            College Homepage
+          </Link>
           <Link
             to="/register"
             className="flex flex-col items-center gap-2 text-sm text-gray-600 hover:text-gray-900"

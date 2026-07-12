@@ -34,4 +34,4 @@ export const YEAR_LEVEL_OPTIONS = [
 
 // College identity, shown on the login screen and sidebar.
 export const COLLEGE_NAME = 'EMA EMITS College';
-export const COLLEGE_FACEBOOK_URL = 'https://www.facebook.com/emaemits';
+export const COLLEGE_FACEBOOK_URL = 'https://www.facebook.com/EECPUpdates';

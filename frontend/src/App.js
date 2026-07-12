@@ -14,6 +14,9 @@ import VerifyEmail from './pages/VerifyEmail';
 import StudentPortal from './pages/StudentPortal';
 import FacultyPortal from './pages/FacultyPortal';
 import AdminPortal from './pages/AdminPortal';
+import ProfilePage from './pages/ProfilePage';
+import MyPayments from './pages/MyPayments';
+import OtherFees from './pages/OtherFees';
 import CalendarPage from './pages/CalendarPage';
 import FAQPage from './pages/FAQPage';
 import Contact from './pages/Contact';
@@ -44,9 +47,9 @@ const Layout = () => {
         <Route path="/student-portal" element={<StudentPortal />} />
         <Route path="/faculty-portal" element={<FacultyPortal />} />
         <Route path="/admin-portal" element={<AdminPortal />} />
-        <Route path="/profile" element={<PortalPlaceholder title="Profile" />} />
-        <Route path="/my-payments" element={<PortalPlaceholder title="My Payments" />} />
-        <Route path="/other-fees" element={<PortalPlaceholder title="Other Fees" />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-payments" element={<MyPayments />} />
+        <Route path="/other-fees" element={<OtherFees />} />
         <Route path="/ticket-requests" element={<PortalPlaceholder title="Ticket Requests" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -28,8 +28,8 @@ const StudentDashboard = () => {
       .catch(() => setCourses([]));
 
     api
-      .get('/portal/balance/')
-      .then((res) => setBalance(res.data))
+      .get('/finance/my-account/')
+      .then((res) => setBalance({ outstanding: res.data.total_balance }))
       .catch(() => setBalance(null));
   }, []);
 

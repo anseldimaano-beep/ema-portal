@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
+import PortalPlaceholder from './pages/PortalPlaceholder';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
@@ -14,24 +15,43 @@ import FAQPage from './pages/FAQPage';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 
+// The dashboard/login screens render their own full-page sidebar layout,
+// so the public marketing navbar is hidden on those routes.
+const PORTAL_ROUTES = ['/student-portal', '/faculty-portal', '/admin-portal', '/profile', '/my-payments', '/other-fees', '/ticket-requests'];
+
+const Layout = () => {
+  const location = useLocation();
+  const hideNavbar = PORTAL_ROUTES.some((route) => location.pathname.startsWith(route));
+
+  return (
+    <>
+      {!hideNavbar && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/student-portal" element={<StudentPortal />} />
+        <Route path="/faculty-portal" element={<FacultyPortal />} />
+        <Route path="/admin-portal" element={<AdminPortal />} />
+        <Route path="/profile" element={<PortalPlaceholder title="Profile" />} />
+        <Route path="/my-payments" element={<PortalPlaceholder title="My Payments" />} />
+        <Route path="/other-fees" element={<PortalPlaceholder title="Other Fees" />} />
+        <Route path="/ticket-requests" element={<PortalPlaceholder title="Ticket Requests" />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  );
+};
+
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/student-portal" element={<StudentPortal />} />
-            <Route path="/faculty-portal" element={<FacultyPortal />} />
-            <Route path="/admin-portal" element={<AdminPortal />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Layout />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

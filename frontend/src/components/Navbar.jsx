@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { APP_NAME } from '../utils/constants';
+import { APP_NAME, COLLEGE_WEBSITE_URL } from '../utils/constants';
 import { LogOut, User } from 'lucide-react';
 import logo from '../assets/logo.png';
 
@@ -21,6 +21,9 @@ const Navbar = () => {
         <span>{APP_NAME}</span>
       </Link>
       <div className="flex items-center gap-6 text-sm">
+        <a href={COLLEGE_WEBSITE_URL} target="_blank" rel="noopener noreferrer">
+          College Website
+        </a>
         <Link to="/calendar">Calendar</Link>
         <Link to="/faq">FAQ</Link>
         <Link to="/contact">Contact</Link>

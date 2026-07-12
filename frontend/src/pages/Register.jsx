@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { ROLE_OPTIONS, POSITION_OPTIONS, ADMIN_ELIGIBLE_POSITIONS } from '../utils/constants';
+import { ROLE_OPTIONS, POSITION_OPTIONS, ADMIN_ELIGIBLE_POSITIONS, YEAR_LEVEL_OPTIONS } from '../utils/constants';
 import logo from '../assets/logo.png';
 
 const initialForm = {
@@ -14,6 +14,9 @@ const initialForm = {
   last_name: '',
   role: 'student',
   leadership_position: 'regular',
+  year_level: '',
+  program: '',
+  section: '',
 };
 
 const Register = () => {
@@ -25,6 +28,7 @@ const Register = () => {
   const [success, setSuccess] = useState('');
 
   const showPosition = form.role === 'faculty' || form.role === 'organization';
+  const showStudentFields = form.role === 'student';
   const positionChoices = POSITION_OPTIONS[form.role] || [];
   const willBeAdmin = showPosition && ADMIN_ELIGIBLE_POSITIONS.includes(form.leadership_position);
 
@@ -46,6 +50,13 @@ const Register = () => {
     try {
       const payload = { ...form };
       if (!showPosition) delete payload.leadership_position;
+      if (!showStudentFields) {
+        delete payload.year_level;
+        delete payload.program;
+        delete payload.section;
+      } else if (!payload.year_level) {
+        delete payload.year_level;
+      }
 
       const data = await register(payload);
       setSuccess(data.message || 'Registration successful. You can now sign in.');
@@ -174,6 +185,43 @@ const Register = () => {
             </div>
             {fieldError('role') && <p className="text-red-600 text-xs mt-1">{fieldError('role')}</p>}
           </div>
+
+          {showStudentFields && (
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Year Level, Course &amp; Section <span className="text-gray-400 font-normal">(optional)</span>
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                <select
+                  className="input-field w-full"
+                  value={form.year_level}
+                  onChange={(e) => setForm({ ...form, year_level: e.target.value })}
+                >
+                  <option value="">Year level</option>
+                  {YEAR_LEVEL_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder="Course (e.g. BSCS)"
+                  className="input-field w-full"
+                  value={form.program}
+                  onChange={(e) => setForm({ ...form, program: e.target.value })}
+                />
+                <input
+                  type="text"
+                  placeholder="Section"
+                  className="input-field w-full"
+                  value={form.section}
+                  onChange={(e) => setForm({ ...form, section: e.target.value })}
+                />
+              </div>
+              {fieldError('year_level') && <p className="text-red-600 text-xs mt-1">{fieldError('year_level')}</p>}
+            </div>
+          )}
 
           {showPosition && (
             <div>

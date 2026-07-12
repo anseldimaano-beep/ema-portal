@@ -67,12 +67,19 @@ class RegisterSerializer(serializers.ModelSerializer):
     leadership_position = serializers.ChoiceField(
         choices=User.Position.choices, required=False, default=User.Position.REGULAR
     )
+    year_level = serializers.ChoiceField(
+        choices=[(1, '1st Year'), (2, '2nd Year'), (3, '3rd Year'), (4, '4th Year')],
+        required=False, allow_null=True
+    )
+    program = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    section = serializers.CharField(required=False, allow_blank=True, max_length=20)
 
     class Meta:
         model = User
         fields = [
             'username', 'email', 'password', 'password_confirm',
-            'first_name', 'last_name', 'role', 'leadership_position', 'department'
+            'first_name', 'last_name', 'role', 'leadership_position', 'department',
+            'year_level', 'program', 'section',
         ]
 
     def validate_username(self, value):
@@ -95,6 +102,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             data['leadership_position'] = User.Position.REGULAR
         elif role in User.ADMIN_ELIGIBLE_ROLES:
             data['leadership_position'] = position
+            # Academic fields only apply to students; ignore if sent for other roles.
+            data.pop('year_level', None)
+            data.pop('program', None)
+            data.pop('section', None)
         else:
             # Should be unreachable since the role ChoiceField above already
             # restricts options, but guard explicitly anyway.

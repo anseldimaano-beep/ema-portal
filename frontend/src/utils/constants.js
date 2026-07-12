@@ -23,3 +23,11 @@ export const POSITION_OPTIONS = {
 };
 
 export const ADMIN_ELIGIBLE_POSITIONS = ['department_head', 'principal', 'president'];
+
+// Year level options shown only when Student is selected on Register.
+export const YEAR_LEVEL_OPTIONS = [
+  { value: 1, label: '1st Year' },
+  { value: 2, label: '2nd Year' },
+  { value: 3, label: '3rd Year' },
+  { value: 4, label: '4th Year' },
+];

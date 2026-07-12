@@ -50,6 +50,8 @@ class Command(BaseCommand):
         user.set_password(password)
         user.is_staff = True
         user.is_superuser = True
+        user.role = User.Role.ADMIN
+        user.email_verified = True
         user.save()
 
         if created:

@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
 import StudentPortal from './pages/StudentPortal';
 import FacultyPortal from './pages/FacultyPortal';
 import AdminPortal from './pages/AdminPortal';
@@ -25,6 +26,7 @@ function App() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/student-portal" element={<StudentPortal />} />
             <Route path="/faculty-portal" element={<FacultyPortal />} />
             <Route path="/admin-portal" element={<AdminPortal />} />

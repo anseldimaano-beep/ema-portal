@@ -189,6 +189,9 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 
+# Base URL of the frontend, used to build links inside emails (verification, password reset)
+FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000')
+
 # Logging
 LOGGING = {
     'version': 1,

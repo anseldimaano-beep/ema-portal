@@ -15,7 +15,7 @@ from .serializers import (
 )
 from .authentication import JWTTokenGenerator
 from .permissions import IsAdmin, IsFaculty, IsStudent, IsOwnerOrAdmin
-from .models import BlacklistedToken, PasswordResetToken
+from .models import BlacklistedToken, PasswordResetToken, EmailVerificationToken
 import uuid
 import jwt
 import hashlib
@@ -34,11 +34,25 @@ class RegisterView(APIView):
         if serializer.is_valid():
             user = serializer.save()
 
+            # Issue a one-time email verification token (only the hash is
+            # stored, mirroring PasswordResetToken).
+            raw_token = uuid.uuid4().hex
+            EmailVerificationToken.objects.create(
+                user=user,
+                token_hash=hashlib.sha256(raw_token.encode()).hexdigest(),
+                expires_at=timezone.now() + timedelta(hours=24),
+            )
+            verify_link = f"{settings.FRONTEND_URL.rstrip('/')}/verify-email?token={raw_token}"
+
             # Send welcome email
             try:
                 send_mail(
                     subject='Welcome to EMA EMITS College Portal',
-                    message=f'Hi {user.first_name}, your account has been created. Please verify your email.',
+                    message=(
+                        f'Hi {user.first_name}, your account has been created. '
+                        f'Please verify your email by visiting this link:\n{verify_link}\n'
+                        'This link expires in 24 hours.'
+                    ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[user.email],
                     fail_silently=True,
@@ -163,6 +177,35 @@ class PasswordChangeView(APIView):
             user.save()
             return Response({'message': 'Password changed successfully. Please login again.'})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyEmailView(APIView):
+    """Confirm an account's email using the token emailed by RegisterView."""
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        raw_token = request.data.get('token')
+        if not raw_token:
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
+        verification_token = (
+            EmailVerificationToken.objects
+            .filter(token_hash=token_hash)
+            .order_by('-created_at')
+            .first()
+        )
+        if not verification_token or not verification_token.is_valid:
+            return Response({'error': 'Invalid or expired verification link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = verification_token.user
+        user.email_verified = True
+        user.save(update_fields=['email_verified'])
+
+        verification_token.used_at = timezone.now()
+        verification_token.save(update_fields=['used_at'])
+
+        return Response({'message': 'Email verified successfully. You can now log in.'})
 
 
 class PasswordResetRequestView(APIView):

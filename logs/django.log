@@ -224,12 +224,6 @@ Traceback (most recent call last):
     return super().execute(query, params)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 django.db.utils.OperationalError: no such table: announcements
-INFO 2026-07-11 21:31:20,235 autoreload Watching for file changes with StatReloader
-INFO 2026-07-11 21:39:29,663 log "GET /api/portal/announcements/ HTTP/1.1" 200 52
-INFO 2026-07-11 21:39:29,672 log "GET /api/portal/announcements/ HTTP/1.1" 200 52
-INFO 2026-07-11 21:39:31,612 log "GET /api/portal/announcements/ HTTP/1.1" 200 52
-INFO 2026-07-11 21:39:31,623 log "GET /api/portal/announcements/ HTTP/1.1" 200 52
-INFO 2026-07-11 21:39:32,922 log "GET /api/portal/announcements/ HTTP/1.1" 200 52
-INFO 2026-07-11 21:39:32,931 log "GET /api/portal/announcements/ HTTP/1.1" 200 52
-INFO 2026-07-11 22:11:38,283 autoreload /app/backend/apps/portal/serializers.py changed, reloading.
-INFO 2026-07-11 22:11:39,685 autoreload Watching for file changes with StatReloader
+WARNING 2026-07-12 16:45:46,050 log Bad Request: /api/auth/verify-email/
+WARNING 2026-07-12 16:45:52,934 log Bad Request: /api/auth/verify-email/
+WARNING 2026-07-12 16:45:52,935 log Bad Request: /api/auth/verify-email/

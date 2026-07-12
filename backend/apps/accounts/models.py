@@ -268,3 +268,27 @@ class PasswordResetToken(models.Model):
     def is_valid(self):
         from django.utils import timezone
         return self.used_at is None and self.expires_at > timezone.now()
+
+
+class EmailVerificationToken(models.Model):
+    """
+    One-time email verification tokens, issued at registration.
+    Only a salted hash of the token is stored, mirroring PasswordResetToken,
+    so a database read alone can't be used to verify an account.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_verification_tokens')
+    token_hash = models.CharField(max_length=128, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'email_verification_tokens'
+
+    def __str__(self):
+        return f"Email verification token for {self.user.username}"
+
+    @property
+    def is_valid(self):
+        from django.utils import timezone
+        return self.used_at is None and self.expires_at > timezone.now()

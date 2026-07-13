@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 django.setup()
 
 from django.contrib.auth import get_user_model
-from apps.portal.models import Announcement, AcademicCalendar, FAQ, PageContent
+from apps.portal.models import Announcement, AcademicCalendar, FAQ, PageContent, Senator, Committee
 from apps.academics.models import Course, Room
 
 User = get_user_model()
@@ -97,6 +97,37 @@ for e in events:
     if not AcademicCalendar.objects.filter(title=e['title'], start_date=e['start_date']).exists():
         AcademicCalendar.objects.create(**e)
         print(f"  Created: {e['title']}")
+
+print("\nCreating demo senators...")
+senators_data = [
+    {'name': 'Add senator name', 'position': 'senate_president', 'department': 'College of Computer Studies', 'term': '2026-2027', 'order': 1},
+    {'name': 'Add senator name', 'position': 'deputy_speaker', 'department': 'College of Education', 'term': '2026-2027', 'order': 2},
+    {'name': 'Add senator name', 'position': 'senator', 'department': 'College of Business Administration', 'term': '2026-2027', 'order': 3},
+    {'name': 'Add senator name', 'position': 'senator', 'department': 'College of Hospitality Management', 'term': '2026-2027', 'order': 4},
+    {'name': 'Add senator name', 'position': 'secretary', 'department': 'College of Computer Studies', 'term': '2026-2027', 'order': 5},
+]
+senators = []
+for s in senators_data:
+    senator, created = Senator.objects.get_or_create(
+        name=s['name'], position=s['position'], department=s['department'], defaults=s
+    )
+    senators.append(senator)
+    if created:
+        print(f"  Created: {senator.get_position_display()} - {senator.department}")
+
+print("\nCreating demo committees...")
+committees_data = [
+    {'name': 'Committee on Rules', 'description': 'Oversees internal rules and procedure of the Model Government.', 'order': 1},
+    {'name': 'Committee on Student Welfare', 'description': 'Handles student concerns, welfare programs, and grievances.', 'order': 2},
+    {'name': 'Committee on Events', 'description': 'Plans and coordinates campus-wide events and activities.', 'order': 3},
+]
+for i, c in enumerate(committees_data):
+    committee, created = Committee.objects.get_or_create(name=c['name'], defaults=c)
+    if created and senators:
+        committee.chairperson = senators[i % len(senators)]
+        committee.members.set(senators[:2])
+        committee.save()
+        print(f"  Created: {committee.name}")
 
 print("\nSeed data complete! You can now login with:")
 print("  Student: student@emaemits.edu.ph / student123")

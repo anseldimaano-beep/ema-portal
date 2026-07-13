@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
 from datetime import timedelta
-from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage
+from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
 from .serializers import (
     AnnouncementSerializer, AnnouncementListSerializer,
     AcademicCalendarSerializer, FAQSerializer,
-    PageContentSerializer, ContactMessageSerializer, ContactMessageAdminSerializer
+    PageContentSerializer, ContactMessageSerializer, ContactMessageAdminSerializer,
+    SenatorSerializer, CommitteeSerializer,
 )
 from apps.accounts.permissions import IsAdmin, IsFacultyOrAdmin
 
@@ -138,6 +139,70 @@ class PageContentManageView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user)
+
+
+# ==================== SENATORS ====================
+
+class SenatorListView(generics.ListAPIView):
+    """List active senators (public)."""
+    queryset = Senator.objects.filter(is_active=True)
+    serializer_class = SenatorSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['position', 'department']
+    ordering = ['order', 'name']
+
+
+class SenatorDetailView(generics.RetrieveAPIView):
+    """Retrieve a senator (public)."""
+    queryset = Senator.objects.filter(is_active=True)
+    serializer_class = SenatorSerializer
+    permission_classes = [AllowAny]
+
+
+class SenatorManageListView(generics.ListCreateAPIView):
+    """List/create senators (Admin/Faculty only)."""
+    queryset = Senator.objects.all()
+    serializer_class = SenatorSerializer
+    permission_classes = [IsFacultyOrAdmin]
+
+
+class SenatorManageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Update/delete a senator (Admin/Faculty only)."""
+    queryset = Senator.objects.all()
+    serializer_class = SenatorSerializer
+    permission_classes = [IsFacultyOrAdmin]
+
+
+# ==================== COMMITTEES ====================
+
+class CommitteeListView(generics.ListAPIView):
+    """List active committees, with chairperson and members (public)."""
+    queryset = Committee.objects.filter(is_active=True).select_related('chairperson').prefetch_related('members')
+    serializer_class = CommitteeSerializer
+    permission_classes = [AllowAny]
+    ordering = ['order', 'name']
+
+
+class CommitteeDetailView(generics.RetrieveAPIView):
+    """Retrieve a committee (public)."""
+    queryset = Committee.objects.filter(is_active=True).select_related('chairperson').prefetch_related('members')
+    serializer_class = CommitteeSerializer
+    permission_classes = [AllowAny]
+
+
+class CommitteeManageListView(generics.ListCreateAPIView):
+    """List/create committees (Admin/Faculty only)."""
+    queryset = Committee.objects.all().select_related('chairperson').prefetch_related('members')
+    serializer_class = CommitteeSerializer
+    permission_classes = [IsFacultyOrAdmin]
+
+
+class CommitteeManageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Update/delete a committee (Admin/Faculty only)."""
+    queryset = Committee.objects.all().select_related('chairperson').prefetch_related('members')
+    serializer_class = CommitteeSerializer
+    permission_classes = [IsFacultyOrAdmin]
 
 
 # ==================== CONTACT ====================

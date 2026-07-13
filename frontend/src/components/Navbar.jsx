@@ -15,6 +15,7 @@ const Navbar = () => (
 
     <div className="hidden md:flex items-center gap-6 text-sm">
       <Link to="/about">About</Link>
+      <Link to="/government">Government</Link>
       <Link to="/calendar">Calendar</Link>
       <Link to="/faq">FAQ</Link>
       <Link to="/contact">Contact</Link>

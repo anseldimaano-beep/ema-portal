@@ -171,6 +171,64 @@ class PageContent(models.Model):
         return self.title
 
 
+class Senator(models.Model):
+    """EEMG Model Government senator/officer."""
+
+    class Position(models.TextChoices):
+        SENATE_PRESIDENT = 'senate_president', 'Senate President'
+        DEPUTY_SPEAKER = 'deputy_speaker', 'Deputy Speaker'
+        SENATOR = 'senator', 'Senator'
+        SECRETARY = 'secretary', 'Secretary'
+
+    name = models.CharField(max_length=150)
+    photo = models.ImageField(upload_to='senators/%Y/%m/', blank=True)
+    position = models.CharField(max_length=20, choices=Position.choices, default=Position.SENATOR)
+    department = models.CharField(max_length=150, blank=True, help_text="e.g. College of Computer Studies")
+    bio = models.TextField(blank=True)
+    term = models.CharField(max_length=20, blank=True, help_text="e.g. 2026-2027")
+
+    order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'senators'
+        ordering = ['order', 'name']
+        verbose_name = 'Senator'
+        verbose_name_plural = 'Senators'
+
+    def __str__(self):
+        return f"{self.name} ({self.get_position_display()})"
+
+
+class Committee(models.Model):
+    """EEMG Model Government committee."""
+
+    name = models.CharField(max_length=150)
+    description = models.TextField(blank=True)
+    chairperson = models.ForeignKey(
+        Senator, on_delete=models.SET_NULL, null=True, blank=True, related_name='chaired_committees'
+    )
+    members = models.ManyToManyField(Senator, blank=True, related_name='committees')
+
+    order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'committees'
+        ordering = ['order', 'name']
+        verbose_name = 'Committee'
+        verbose_name_plural = 'Committees'
+
+    def __str__(self):
+        return self.name
+
+
 class ContactMessage(models.Model):
     """Contact form submissions."""
 

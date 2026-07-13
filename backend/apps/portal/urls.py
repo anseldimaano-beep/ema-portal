@@ -18,6 +18,18 @@ urlpatterns = [
     path('faqs/<int:pk>/', views.FAQDetailView.as_view(), name='faq-detail'),
     path('faqs/manage/', views.FAQManageView.as_view(), name='faq-manage'),
 
+    # Senators
+    path('senators/', views.SenatorListView.as_view(), name='senator-list'),
+    path('senators/<int:pk>/', views.SenatorDetailView.as_view(), name='senator-detail'),
+    path('senators/manage/', views.SenatorManageListView.as_view(), name='senator-manage-list'),
+    path('senators/manage/<int:pk>/', views.SenatorManageDetailView.as_view(), name='senator-manage-detail'),
+
+    # Committees
+    path('committees/', views.CommitteeListView.as_view(), name='committee-list'),
+    path('committees/<int:pk>/', views.CommitteeDetailView.as_view(), name='committee-detail'),
+    path('committees/manage/', views.CommitteeManageListView.as_view(), name='committee-manage-list'),
+    path('committees/manage/<int:pk>/', views.CommitteeManageDetailView.as_view(), name='committee-manage-detail'),
+
     # Pages
     path('pages/<str:page>/', views.PageContentView.as_view(), name='page-content'),
     path('pages/manage/', views.PageContentManageView.as_view(), name='page-manage'),

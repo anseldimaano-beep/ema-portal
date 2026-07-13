@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage
+from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
 
 
 @admin.register(Announcement)
@@ -47,6 +47,23 @@ class PageContentAdmin(admin.ModelAdmin):
     list_display = ['page', 'title', 'last_updated', 'updated_by']
     list_filter = ['page']
     search_fields = ['title', 'content']
+
+
+@admin.register(Senator)
+class SenatorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'position', 'department', 'term', 'order', 'is_active']
+    list_filter = ['position', 'is_active', 'term']
+    search_fields = ['name', 'department']
+    ordering = ['order', 'name']
+
+
+@admin.register(Committee)
+class CommitteeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'chairperson', 'order', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name', 'description']
+    filter_horizontal = ['members']
+    ordering = ['order', 'name']
 
 
 @admin.register(ContactMessage)

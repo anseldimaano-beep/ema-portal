@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage
+from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
@@ -53,6 +53,44 @@ class PageContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PageContent
         fields = ['id', 'page', 'title', 'content', 'last_updated']
+
+
+class SenatorSerializer(serializers.ModelSerializer):
+    position_display = serializers.CharField(source='get_position_display', read_only=True)
+
+    class Meta:
+        model = Senator
+        fields = [
+            'id', 'name', 'photo', 'position', 'position_display',
+            'department', 'bio', 'term', 'order', 'is_active',
+        ]
+
+
+class SenatorBriefSerializer(serializers.ModelSerializer):
+    """Lightweight senator representation for nesting inside committees."""
+    position_display = serializers.CharField(source='get_position_display', read_only=True)
+
+    class Meta:
+        model = Senator
+        fields = ['id', 'name', 'photo', 'position', 'position_display']
+
+
+class CommitteeSerializer(serializers.ModelSerializer):
+    chairperson = SenatorBriefSerializer(read_only=True)
+    chairperson_id = serializers.PrimaryKeyRelatedField(
+        source='chairperson', queryset=Senator.objects.all(), write_only=True, required=False, allow_null=True
+    )
+    members = SenatorBriefSerializer(many=True, read_only=True)
+    member_ids = serializers.PrimaryKeyRelatedField(
+        source='members', queryset=Senator.objects.all(), write_only=True, many=True, required=False
+    )
+
+    class Meta:
+        model = Committee
+        fields = [
+            'id', 'name', 'description', 'chairperson', 'chairperson_id',
+            'members', 'member_ids', 'order', 'is_active',
+        ]
 
 
 class ContactMessageSerializer(serializers.ModelSerializer):

@@ -386,3 +386,5 @@ INFO 2026-07-13 17:58:17,459 autoreload /app/backend/apps/academics/models.py ch
 INFO 2026-07-13 17:58:19,259 autoreload Watching for file changes with StatReloader
 INFO 2026-07-13 19:09:26,981 autoreload /app/backend/apps/accounts/apps.py changed, reloading.
 INFO 2026-07-13 19:09:28,273 autoreload Watching for file changes with StatReloader
+INFO 2026-07-13 19:16:33,095 autoreload /app/backend/apps/accounts/admin.py changed, reloading.
+INFO 2026-07-13 19:16:34,369 autoreload Watching for file changes with StatReloader

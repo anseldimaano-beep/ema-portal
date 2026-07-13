@@ -11,6 +11,7 @@ import { SESSION_LABEL, SESSION_SUBLABEL } from '../utils/constants';
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
+  { label: 'Project', to: '/project' },
   {
     label: 'Government',
     to: '/government',

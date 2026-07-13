@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
+import Project from './pages/Project';
 import Government from './pages/Government';
 import CalendarPage from './pages/CalendarPage';
 import FAQPage from './pages/FAQPage';
@@ -16,6 +17,7 @@ const Layout = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/project" element={<Project />} />
       <Route path="/government" element={<Government />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/faq" element={<FAQPage />} />

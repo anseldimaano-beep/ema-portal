@@ -380,3 +380,5 @@ INFO 2026-07-13 17:42:31,204 autoreload /app/backend/ema_emits/urls.py changed, 
 INFO 2026-07-13 17:42:32,636 autoreload Watching for file changes with StatReloader
 INFO 2026-07-13 17:46:14,444 autoreload /app/backend/apps/academics/__init__.py changed, reloading.
 INFO 2026-07-13 17:46:15,858 autoreload Watching for file changes with StatReloader
+INFO 2026-07-13 17:51:26,364 autoreload /app/backend/apps/accounts/migrations/__init__.py changed, reloading.
+INFO 2026-07-13 17:51:27,776 autoreload Watching for file changes with StatReloader

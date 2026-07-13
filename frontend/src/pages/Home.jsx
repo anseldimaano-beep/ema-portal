@@ -123,6 +123,11 @@ const SITE_SECTIONS = [
     to: '/about'
   },
   {
+    title: 'Project',
+    body: 'What the Model Government program is and how it works.',
+    to: '/project'
+  },
+  {
     title: 'Government',
     body: 'Meet the senators and see how committees are organized.',
     to: '/government'

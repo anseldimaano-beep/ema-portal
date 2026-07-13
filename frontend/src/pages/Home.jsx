@@ -1,8 +1,120 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, ImageOff } from 'lucide-react';
 import api from '../services/api';
-import { APP_NAME, COLLEGE_NAME } from '../utils/constants';
+import { formatDate } from '../utils/helpers';
 import eemgSeal from '../assets/eemg_seal.png';
+
+// Hero image + pagination, styled after the Senate site's
+// "Latest Photo Releases" module: an eyebrow label, headline, excerpt and
+// date on the left, a large photo with prev/next controls on the right.
+const HeroCarousel = ({ slides }) => {
+  const [index, setIndex] = useState(0);
+  const total = slides.length;
+  const slide = slides[index];
+
+  const goPrev = () => setIndex((i) => (i - 1 + total) % total);
+  const goNext = () => setIndex((i) => (i + 1) % total);
+
+  if (!slide) return null;
+
+  return (
+    <div className="bg-gray-50 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 py-10 md:py-16 grid md:grid-cols-2 gap-10 items-center">
+        {/* Left: copy */}
+        <div>
+          <div className="eyebrow mb-4">Latest Announcements</div>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
+            {slide.title}
+          </h1>
+          <p className="text-gray-600 text-base md:text-lg mb-6 max-w-xl">
+            {slide.excerpt || slide.content}
+          </p>
+          {slide.published_at && (
+            <p className="text-sm text-gray-400 mb-8">{formatDate(slide.published_at)}</p>
+          )}
+          <div className="flex flex-wrap gap-4">
+            <Link to={`/government`} className="btn-primary">
+              Learn More
+            </Link>
+            <Link to="/faq" className="btn-outline">
+              View All Announcements
+            </Link>
+          </div>
+        </div>
+
+        {/* Right: photo + pagination, mirroring the reference layout */}
+        <div className="relative rounded-xl overflow-hidden shadow-xl bg-primary-900 aspect-[4/3]">
+          {slide.featured_image ? (
+            <img
+              src={slide.featured_image}
+              alt={slide.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <img src={eemgSeal} alt="" className="h-24 w-24 object-contain opacity-70" />
+            </div>
+          )}
+
+          {total > 1 && (
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 bg-gradient-to-t from-black/60 to-transparent py-4">
+              <button
+                onClick={goPrev}
+                aria-label="Previous"
+                className="h-9 w-9 flex items-center justify-center rounded-full bg-white/90 text-primary-900 hover:bg-white transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <span className="text-white text-sm font-semibold tabular-nums">
+                {index + 1} / {total}
+              </span>
+              <button
+                onClick={goNext}
+                aria-label="Next"
+                className="h-9 w-9 flex items-center justify-center rounded-full bg-white/90 text-primary-900 hover:bg-white transition-colors"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CATEGORY_LABELS = {
+  general: 'General',
+  academic: 'Academic',
+  administrative: 'Administrative',
+  event: 'Event',
+  emergency: 'Emergency',
+  enrollment: 'Enrollment',
+  scholarship: 'Scholarship'
+};
+
+const AnnouncementCard = ({ a }) => (
+  <div className="card-accent flex flex-col">
+    <div className="h-40 bg-primary-50 flex items-center justify-center overflow-hidden">
+      {a.featured_image ? (
+        <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
+      ) : (
+        <ImageOff className="h-8 w-8 text-primary-200" />
+      )}
+    </div>
+    <div className="p-5 flex flex-col flex-1">
+      <div className="flex items-center gap-2 text-xs mb-2">
+        <span className="uppercase tracking-wide font-bold text-primary-700">
+          {CATEGORY_LABELS[a.category] || 'General'}
+        </span>
+        {a.published_at && <span className="text-gray-400">· {formatDate(a.published_at)}</span>}
+      </div>
+      <h3 className="font-bold text-gray-900 mb-2">{a.title}</h3>
+      <p className="text-gray-600 text-sm flex-1">{a.excerpt || a.content}</p>
+    </div>
+  </div>
+);
 
 const Home = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -14,38 +126,41 @@ const Home = () => {
       .catch(() => setAnnouncements([]));
   }, []);
 
+  // Feature the newest/pinned items in the hero carousel; the rest fill the grid below.
+  const heroSlides = useMemo(() => announcements.slice(0, 5), [announcements]);
+  const restSlides = useMemo(() => announcements.slice(5), [announcements]);
+
+  const fallbackSlide = {
+    title: 'EMA EMITS Model Government',
+    excerpt:
+      'Follow session updates, senator profiles, and committee work from the EMA EMITS Model Government right here.',
+    featured_image: null
+  };
+
   return (
     <div>
-      {/* Hero */}
-      <div className="bg-primary-900 text-white py-16 px-4 text-center">
-        <img src={eemgSeal} alt={`${APP_NAME} seal`} className="h-28 w-28 object-contain mx-auto mb-6" />
-        <h1 className="text-4xl font-bold mb-3">{COLLEGE_NAME}</h1>
-        <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
-          {APP_NAME} — everything you need for admissions and campus life in one place.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link to="/contact" className="btn-primary bg-white text-primary-900 hover:bg-gray-100">
-            Get in Touch
-          </Link>
-        </div>
-      </div>
+      <HeroCarousel slides={heroSlides.length > 0 ? heroSlides : [fallbackSlide]} />
 
-      {/* Announcements / news */}
-      <div className="bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-16">
-          <h2 className="text-2xl font-bold mb-6">News &amp; Announcements</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {announcements.map((a) => (
-              <div key={a.id} className="card">
-                <h3 className="font-bold">{a.title}</h3>
-                <p className="text-gray-600 mt-2">{a.excerpt || a.content}</p>
-              </div>
-            ))}
-            {announcements.length === 0 && (
-              <p className="text-gray-500">No announcements right now.</p>
-            )}
+      {/* Announcements grid */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <div className="eyebrow mb-3">News &amp; Announcements</div>
+            <h2 className="text-2xl font-bold text-gray-900">More from the Model Government</h2>
           </div>
         </div>
+
+        {announcements.length === 0 && (
+          <p className="text-gray-500">No announcements right now. Check back soon.</p>
+        )}
+
+        {restSlides.length > 0 && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {restSlides.map((a) => (
+              <AnnouncementCard key={a.id} a={a} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -58,12 +58,13 @@ const Government = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="eyebrow mb-3">The Government</div>
       <h1 className="text-3xl font-bold mb-2">EEMG Model Government</h1>
       <p className="text-gray-600 mb-10 max-w-2xl">
         Meet the senators and committees of the EMA EMITS Model Government.
       </p>
 
-      <section className="mb-16">
+      <section id="senators" className="mb-16 scroll-mt-24">
         <h2 className="text-2xl font-bold mb-6">Senators</h2>
         <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
           {senators.map((s) => (
@@ -73,7 +74,7 @@ const Government = () => {
         </div>
       </section>
 
-      <section>
+      <section id="committees" className="scroll-mt-24">
         <h2 className="text-2xl font-bold mb-6">Committees</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {committees.map((c) => (

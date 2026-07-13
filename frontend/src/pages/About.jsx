@@ -5,6 +5,7 @@ import { COLLEGE_NAME } from '../utils/constants';
 // vision statements before this goes live.
 const About = () => (
   <div className="max-w-4xl mx-auto px-4 py-16">
+    <div className="eyebrow mb-3">About Us</div>
     <h1 className="text-3xl font-bold mb-8">About {COLLEGE_NAME}</h1>
 
     <section className="mb-10">

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 
 // A.Y. 2026-2027 roster, names only. Used as a fallback whenever the API
@@ -77,6 +78,7 @@ const NameList = ({ names }) => (
 const Government = () => {
   const [senators, setSenators] = useState([]);
   const [committees, setCommittees] = useState([]);
+  const { hash } = useLocation();
 
   useEffect(() => {
     api
@@ -89,6 +91,18 @@ const Government = () => {
       .then((res) => setCommittees(res.data.results || res.data || []))
       .catch(() => setCommittees([]));
   }, []);
+
+  // React Router doesn't auto-scroll to a #hash target on client-side
+  // navigation (only real browser page loads do that), so do it manually
+  // once the target section has rendered.
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.replace('#', '');
+    const timer = setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [hash]);
 
   // Prefer live API data once the backend is seeded; otherwise show the
   // A.Y. 2026-2027 roster as-is.

@@ -376,3 +376,5 @@ INFO 2026-07-13 17:32:53,637 autoreload /app/backend/apps/academics/models.py ch
 INFO 2026-07-13 17:32:55,226 autoreload Watching for file changes with StatReloader
 INFO 2026-07-13 17:36:55,810 autoreload /app/backend/apps/portal/serializers.py changed, reloading.
 INFO 2026-07-13 17:36:57,441 autoreload Watching for file changes with StatReloader
+INFO 2026-07-13 17:42:31,204 autoreload /app/backend/ema_emits/urls.py changed, reloading.
+INFO 2026-07-13 17:42:32,636 autoreload Watching for file changes with StatReloader

@@ -8,5 +8,5 @@ export const COLLEGE_FACEBOOK_URL = 'https://www.facebook.com/EECPUpdates';
 
 // Shown as the small pill badge in the header, mirroring how the Senate site
 // shows the current Congress number/term.
-export const SESSION_LABEL = 'AY 2025-2026';
+export const SESSION_LABEL = 'S.Y. 2026-2027';
 export const SESSION_SUBLABEL = '1ST TERM';

@@ -116,40 +116,47 @@ const AnnouncementCard = ({ a }) => (
   </div>
 );
 
-const PROJECT_PILLARS = [
+const SITE_SECTIONS = [
   {
-    title: 'What It Is',
-    body:
-      'A hands-on civic education program where EMA EMITS College students take on the roles of senators and committee officers, running real legislative sessions on issues affecting campus life.'
+    title: 'About',
+    body: 'The college background, mission, vision, and accreditation details.',
+    to: '/about'
   },
   {
-    title: 'How It Works',
-    body:
-      'Students file resolutions, debate them in committee, and bring approved measures to the floor for a full session vote, following the same process used by the actual Philippine Senate.'
+    title: 'Government',
+    body: 'Meet the senators and see how committees are organized.',
+    to: '/government'
   },
   {
-    title: 'Why It Matters',
-    body:
-      'The program builds public speaking, policy research, and parliamentary skills, giving students first-hand practice in how laws are written, debated, and passed.'
+    title: 'Calendar',
+    body: 'Academic dates, session schedules, and upcoming events.',
+    to: '/calendar'
+  },
+  {
+    title: 'FAQ',
+    body: 'Answers to common questions about admissions and campus life.',
+    to: '/faq'
+  },
+  {
+    title: 'Contact',
+    body: 'Reach the office directly or send a message through the form.',
+    to: '/contact'
   }
 ];
 
-const ProjectSection = () => (
+const SiteOverviewSection = () => (
   <div className="max-w-7xl mx-auto px-4 py-16">
-    <div className="eyebrow mb-3">The Project</div>
-    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-      About the EMA EMITS Model Government
-    </h2>
+    <div className="eyebrow mb-3">On This Site</div>
+    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">What you'll find here</h2>
     <p className="text-gray-600 max-w-3xl mb-10">
-      EEMG is EMA EMITS College's student-run simulation of the Philippine Senate, giving students
-      a direct, practical understanding of how legislation is made from the ground up.
+      A quick summary of every section of the EMA EMITS Model Government portal.
     </p>
-    <div className="grid md:grid-cols-3 gap-6">
-      {PROJECT_PILLARS.map((p) => (
-        <div key={p.title} className="card-accent p-6">
-          <h3 className="font-bold text-primary-900 mb-2">{p.title}</h3>
-          <p className="text-gray-600 text-sm">{p.body}</p>
-        </div>
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {SITE_SECTIONS.map((s) => (
+        <Link key={s.title} to={s.to} className="card-accent p-6 hover:shadow-lg transition-shadow">
+          <h3 className="font-bold text-primary-900 mb-2">{s.title}</h3>
+          <p className="text-gray-600 text-sm">{s.body}</p>
+        </Link>
       ))}
     </div>
   </div>
@@ -180,7 +187,7 @@ const Home = () => {
     <div>
       <HeroCarousel slides={heroSlides.length > 0 ? heroSlides : [fallbackSlide]} />
 
-      <ProjectSection />
+      <SiteOverviewSection />
 
       {/* Announcements grid */}
       <div className="max-w-7xl mx-auto px-4 py-16">

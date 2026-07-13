@@ -350,3 +350,21 @@ WARNING 2026-07-12 19:21:16,380 log Bad Request: /api/auth/login/
 WARNING 2026-07-12 19:21:21,216 log Bad Request: /api/auth/login/
 INFO 2026-07-13 16:51:20,857 autoreload Watching for file changes with StatReloader
 INFO 2026-07-13 16:53:37,205 autoreload Watching for file changes with StatReloader
+INFO 2026-07-13 16:55:20,722 log "GET /api/portal/announcements/ HTTP/1.1" 200 8634
+INFO 2026-07-13 16:55:20,760 log "GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+INFO 2026-07-13 16:55:20,760 log "GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+INFO 2026-07-13 16:55:20,760 log "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3426
+INFO 2026-07-13 16:55:20,761 log "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3796
+INFO 2026-07-13 16:55:20,767 log "GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1793
+INFO 2026-07-13 16:55:20,770 log "GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+INFO 2026-07-13 16:55:20,772 log "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 200 59
+INFO 2026-07-13 16:55:20,772 log "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+INFO 2026-07-13 16:55:20,775 log "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2026-07-13 16:55:20,776 log "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2026-07-13 16:55:20,777 log "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2026-07-13 16:55:20,789 log "GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+INFO 2026-07-13 16:55:20,797 log "GET /static/rest_framework/fonts/glyphicons-halflings-regular.woff2 HTTP/1.1" 200 18028
+WARNING 2026-07-13 16:55:20,862 log Not Found: /favicon.ico
+WARNING 2026-07-13 16:55:20,862 log "GET /favicon.ico HTTP/1.1" 404 3013
+INFO 2026-07-13 17:02:55,195 autoreload /app/backend/ema_emits/urls.py changed, reloading.
+INFO 2026-07-13 17:02:56,743 autoreload Watching for file changes with StatReloader

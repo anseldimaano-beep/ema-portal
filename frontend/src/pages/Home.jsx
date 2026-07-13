@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { APP_NAME, COLLEGE_NAME } from '../utils/constants';
-import logo from '../assets/logo.png';
+import eemgSeal from '../assets/eemg_seal.png';
 
 const Home = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -18,7 +18,7 @@ const Home = () => {
     <div>
       {/* Hero */}
       <div className="bg-primary-900 text-white py-16 px-4 text-center">
-        <img src={logo} alt={`${COLLEGE_NAME} seal`} className="h-28 w-28 object-contain mx-auto mb-6" />
+        <img src={eemgSeal} alt={`${APP_NAME} seal`} className="h-28 w-28 object-contain mx-auto mb-6" />
         <h1 className="text-4xl font-bold mb-3">{COLLEGE_NAME}</h1>
         <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
           {APP_NAME} — everything you need for admissions and campus life in one place.

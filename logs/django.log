@@ -368,3 +368,5 @@ WARNING 2026-07-13 16:55:20,862 log Not Found: /favicon.ico
 WARNING 2026-07-13 16:55:20,862 log "GET /favicon.ico HTTP/1.1" 404 3013
 INFO 2026-07-13 17:02:55,195 autoreload /app/backend/ema_emits/urls.py changed, reloading.
 INFO 2026-07-13 17:02:56,743 autoreload Watching for file changes with StatReloader
+INFO 2026-07-13 17:08:30,762 autoreload /app/backend/apps/accounts/migrations/__init__.py changed, reloading.
+INFO 2026-07-13 17:08:32,390 autoreload Watching for file changes with StatReloader

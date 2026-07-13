@@ -1,4 +1,4 @@
-export const APP_NAME = 'EMA EMITS College Portal';
+export const APP_NAME = 'EMA EMITS MODEL GOVERNMENT';
 export const APP_VERSION = '1.0.0';
 export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 

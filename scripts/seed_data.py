@@ -11,7 +11,6 @@ django.setup()
 from django.contrib.auth import get_user_model
 from apps.portal.models import Announcement, AcademicCalendar, FAQ, PageContent
 from apps.academics.models import Course, Room
-from apps.finance.models import StudentAccount, ExamPermit
 
 User = get_user_model()
 
@@ -98,25 +97,6 @@ for e in events:
     if not AcademicCalendar.objects.filter(title=e['title'], start_date=e['start_date']).exists():
         AcademicCalendar.objects.create(**e)
         print(f"  Created: {e['title']}")
-
-print("\nCreating demo student account (tuition, misc fee, exam permits)...")
-student = User.objects.filter(username='2023-00001').first()
-if student:
-    account, created = StudentAccount.objects.get_or_create(
-        student=student,
-        term='1st-2026-2027',
-        defaults={
-            'tuition_fee': 25000, 'tuition_paid': 15000,
-            'misc_fee': 5000, 'misc_paid': 5000,
-            'notes': 'BSCS 3rd Year - regular load',
-        }
-    )
-    print(f"  {'Created' if created else 'Exists'}: account for {student.username} ({account.term})")
-
-    for exam_type, _label in ExamPermit.ExamType.choices:
-        permit, p_created = ExamPermit.objects.get_or_create(account=account, exam_type=exam_type)
-        if p_created:
-            print(f"    Created permit: {permit.get_exam_type_display()} (auto @ {permit.required_percent}% paid)")
 
 print("\nSeed data complete! You can now login with:")
 print("  Student: student@emaemits.edu.ph / student123")

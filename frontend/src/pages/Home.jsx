@@ -52,8 +52,8 @@ const HeroCarousel = ({ slides }) => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <img src={eemgSeal} alt="" className="h-24 w-24 object-contain opacity-70" />
+            <div className="w-full h-full flex items-center justify-center p-8">
+              <img src={eemgSeal} alt="" className="w-full h-full object-contain" />
             </div>
           )}
 

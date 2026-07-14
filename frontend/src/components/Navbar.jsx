@@ -10,6 +10,7 @@ import { SESSION_LABEL, SESSION_SUBLABEL } from '../utils/constants';
 // a lighter nav row underneath with dropdown groups.
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
+  { label: 'News', to: '/announcements' },
   {
     label: 'About',
     to: '/about',
@@ -28,7 +29,6 @@ const NAV_ITEMS = [
     ]
   },
   { label: 'Calendar', to: '/calendar' },
-  { label: 'News', to: '/announcements' },
   { label: 'FAQ', to: '/faq' },
   { label: 'Contact', to: '/contact' }
 ];

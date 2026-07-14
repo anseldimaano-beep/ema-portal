@@ -33,25 +33,30 @@ const REPRESENTATIVES = [
 ];
 
 const COMMITTEES = [
-  { name: 'Finance', members: ['Manalo, Zandro', 'Brucal, Jana Mae', 'Malubag, Jennelyn', 'Abel, Nicole'] },
+  { name: 'Finance', chair: 'Manalo, Zandro', members: ['Manalo, Zandro', 'Brucal, Jana Mae', 'Malubag, Jennelyn', 'Abel, Nicole'] },
   {
     name: 'Security & Safety',
+    chair: 'Matining, Bryan',
     members: ['Matining, Bryan', 'Matining, Aeron', 'Mercado, Charisse', 'Manalon, Jericho', 'Oliver, Rencel Jake']
   },
   {
     name: 'Waste & Classroom Management',
+    chair: 'Recaro, Benedict',
     members: ['Recaro, Benedict', 'Avelino, Kane Lee', 'Verdadero, Angela', 'Sabalvaro, Angelica']
   },
   {
     name: 'Media',
+    chair: 'Bayhon, Jamailah',
     members: ['Bayhon, Jamailah', 'Dimaapi, Ansel John', 'Cabatian, Milky', 'Sadicon, Marishel Ayesha', 'Reyes, Mary Jane']
   },
   {
     name: 'Rules & Regulations and By-Laws',
+    chair: 'Sales, Regielyn',
     members: ['Sales, Regielyn', 'Regalario, Shaira', 'Paner, Benedict', 'Villa, Kate Angela']
   },
   {
     name: 'Events',
+    chair: 'Rafol, John Philip',
     members: [
       'Rafol, John Philip',
       'Fransisco, Joshua',
@@ -64,14 +69,29 @@ const COMMITTEES = [
   }
 ];
 
-const NameList = ({ names }) => (
+const NameList = ({ names, chair }) => (
   <ul className="mt-3 space-y-1.5">
-    {names.map((n) => (
-      <li key={n} className="text-sm text-gray-700 flex items-start gap-2">
-        <span className="text-accent-500 mt-1">&#9733;</span>
-        {n}
-      </li>
-    ))}
+    {names.map((n) => {
+      const isChair = chair && n === chair;
+      return (
+        <li
+          key={n}
+          className={`text-sm flex items-start gap-2 ${
+            isChair ? 'font-bold text-primary-900' : 'text-gray-700'
+          }`}
+        >
+          <span className={isChair ? 'text-accent-600 mt-1' : 'text-accent-500 mt-1'}>&#9733;</span>
+          <span>
+            {n}
+            {isChair && (
+              <span className="ml-2 align-middle text-[10px] font-bold uppercase tracking-wide bg-accent-100 text-accent-800 px-2 py-0.5 rounded-full">
+                Chairperson
+              </span>
+            )}
+          </span>
+        </li>
+      );
+    })}
   </ul>
 );
 
@@ -184,7 +204,7 @@ const Government = () => {
             {COMMITTEES.map((c) => (
               <div key={c.name} className="card-accent p-6">
                 <h3 className="font-bold text-primary-900">{c.name}</h3>
-                <NameList names={c.members} />
+                <NameList names={c.members} chair={c.chair} />
               </div>
             ))}
           </div>

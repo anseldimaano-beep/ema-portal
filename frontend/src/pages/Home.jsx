@@ -83,6 +83,25 @@ const HeroCarousel = ({ slides }) => {
     </div>
   );
 };
+const STATS = [
+  { label: 'Senators', value: '12' },
+  { label: 'Committees', value: '6' },
+  { label: 'Representative Groups', value: '5' },
+  { label: 'Founded', value: '2012' }
+];
+
+const StatsStrip = () => (
+  <div className="bg-primary-900 border-b-4 border-accent-400">
+    <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      {STATS.map((s) => (
+        <div key={s.label}>
+          <div className="text-3xl md:text-4xl font-extrabold text-white">{s.value}</div>
+          <div className="text-xs md:text-sm text-primary-200 uppercase tracking-wide mt-1">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const CATEGORY_LABELS = {
   general: 'General',
@@ -191,6 +210,8 @@ const Home = () => {
   return (
     <div>
       <HeroCarousel slides={heroSlides.length > 0 ? heroSlides : [fallbackSlide]} />
+
+      <StatsStrip />
 
       <SiteOverviewSection />
 

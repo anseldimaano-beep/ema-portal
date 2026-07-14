@@ -2,22 +2,29 @@ import React, { useState } from 'react';
 import { COLLEGE_NAME } from '../utils/constants';
 
 // Founded year, motto, and location are taken from the college seal itself.
-// History copy is left as a clearly-marked placeholder since it should
-// come from the school directly, not be invented here.
+// Mission/Vision/Core Values/Hymn belong to the college (EECP) specifically,
+// not the student government body, so they only render under that tab.
 const HISTORY_TABS = [
   {
     key: 'college',
     label: 'EMA EMITS College Philippines',
-    body: "Add the college's founding story and key milestones here — replace this placeholder with the official write-up.",
-    hasImage: true
+    body: "Add the college's founding story and key milestones here — replace this placeholder with the official write-up."
   },
   {
     key: 'eemg',
     label: 'EMA EMITS Model Government',
-    body: "Add the Model Government's founding story and key milestones here — replace this placeholder with the official write-up.",
-    hasImage: false
+    body: "Add the Model Government's founding story and key milestones here — replace this placeholder with the official write-up."
   }
 ];
+
+const PlaceholderSection = ({ title, text }) => (
+  <section className="mb-8">
+    <h2 className="text-xl font-bold mb-2">{title}</h2>
+    <div className="card-accent p-6">
+      <p className="text-gray-500 text-sm italic">{text}</p>
+    </div>
+  </section>
+);
 
 const HistoryTabs = () => {
   const [active, setActive] = useState(HISTORY_TABS[0].key);
@@ -40,15 +47,24 @@ const HistoryTabs = () => {
           </button>
         ))}
       </div>
-      <div className="card-accent p-6">
+
+      <div className="card-accent p-6 mb-8">
         {/* Image placeholder - photos to be added later */}
-        {tab.hasImage && (
-          <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
-            <span className="text-sm text-gray-400">Photo coming soon</span>
-          </div>
-        )}
+        <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
+          <span className="text-sm text-gray-400">Photo coming soon</span>
+        </div>
         <p className="text-gray-500 text-sm italic">{tab.body}</p>
       </div>
+
+      {/* Mission/Vision/Core Values/Hymn are EECP (college) specific */}
+      {active === 'college' && (
+        <>
+          <PlaceholderSection title="Mission" text="Add the official mission statement here." />
+          <PlaceholderSection title="Vision" text="Add the official vision statement here." />
+          <PlaceholderSection title="Core Values" text="Add the official core values here." />
+          <PlaceholderSection title="EECP Hymn" text="Add the EECP Hymn lyrics here." />
+        </>
+      )}
     </div>
   );
 };
@@ -62,7 +78,7 @@ const About = () => (
       in Pinamalayan, Oriental Mindoro, Philippines, under the motto "Love, Faith, Justice."
     </p>
 
-    <section className="mb-8">
+    <section>
       <h2 className="text-xl font-bold mb-2">Our History</h2>
       <HistoryTabs />
     </section>

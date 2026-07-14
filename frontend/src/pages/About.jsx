@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { COLLEGE_NAME } from '../utils/constants';
 
 // Founded year, motto, and location are taken from the college seal itself.
@@ -28,7 +29,18 @@ const PlaceholderSection = ({ title, text }) => (
 
 const HistoryTabs = () => {
   const [active, setActive] = useState(HISTORY_TABS[0].key);
+  const { hash } = useLocation();
   const tab = HISTORY_TABS.find((t) => t.key === active);
+
+  // The About dropdown links to /about#college and /about#eemg. React
+  // Router doesn't reload the page for a hash change on the same route, so
+  // pick up the hash here and switch the tab to match.
+  useEffect(() => {
+    const key = hash.replace('#', '');
+    if (HISTORY_TABS.some((t) => t.key === key)) {
+      setActive(key);
+    }
+  }, [hash]);
 
   return (
     <div>

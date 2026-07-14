@@ -10,7 +10,14 @@ import { SESSION_LABEL, SESSION_SUBLABEL } from '../utils/constants';
 // a lighter nav row underneath with dropdown groups.
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
-  { label: 'About', to: '/about' },
+  {
+    label: 'About',
+    to: '/about',
+    children: [
+      { label: 'College History', to: '/about#college' },
+      { label: 'EEMG History', to: '/about#eemg' }
+    ]
+  },
   { label: 'Project', to: '/project' },
   {
     label: 'Government',

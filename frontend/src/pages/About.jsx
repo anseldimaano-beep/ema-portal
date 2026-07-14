@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { COLLEGE_NAME } from '../utils/constants';
 
 // Founded year, motto, and location are taken from the college seal itself.
+// History copy is left as a clearly-marked placeholder since it should
+// come from the school directly, not be invented here.
 const HISTORY_TABS = [
   {
     key: 'college',
@@ -39,6 +41,7 @@ const HistoryTabs = () => {
         ))}
       </div>
       <div className="card-accent p-6">
+        {/* Image placeholder - photos to be added later */}
         {tab.hasImage && (
           <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
             <span className="text-sm text-gray-400">Photo coming soon</span>

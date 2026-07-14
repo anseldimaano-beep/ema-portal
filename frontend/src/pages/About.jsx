@@ -9,12 +9,14 @@ const HISTORY_TABS = [
   {
     key: 'college',
     label: 'EMA EMITS College Philippines',
-    body: "Add the college's founding story and key milestones here — replace this placeholder with the official write-up."
+    body: "Add the college's founding story and key milestones here — replace this placeholder with the official write-up.",
+    hasImage: true
   },
   {
     key: 'eemg',
     label: 'EMA EMITS Model Government',
-    body: "Add the Model Government's founding story and key milestones here — replace this placeholder with the official write-up."
+    body: "Add the Model Government's founding story and key milestones here — replace this placeholder with the official write-up.",
+    hasImage: false
   }
 ];
 
@@ -40,12 +42,14 @@ const HistoryTabs = () => {
         ))}
       </div>
       <div className="card-accent p-6">
-        {/* Image placeholder - photos to be added later */}
-        <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
-          <span className="text-sm text-gray-400">Photo coming soon</span>
+          {/* Image placeholder - photos to be added later */}
+          {tab.hasImage && (
+            <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
+              <span className="text-sm text-gray-400">Photo coming soon</span>
+            </div>
+          )}
+          <p className="text-gray-500 text-sm italic">{tab.body}</p>
         </div>
-        <p className="text-gray-500 text-sm italic">{tab.body}</p>
-      </div>
     </div>
   );
 };

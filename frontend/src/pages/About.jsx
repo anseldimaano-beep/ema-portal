@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { COLLEGE_NAME } from '../utils/constants';
 
 // Founded year, motto, and location are taken from the college seal itself.
-// Mission, Vision, Core Values, and history copy are left as clearly-marked
-// placeholders since those are official statements that should come from
-// the school directly, not be invented here.
 const HISTORY_TABS = [
   {
     key: 'college',
@@ -42,26 +39,16 @@ const HistoryTabs = () => {
         ))}
       </div>
       <div className="card-accent p-6">
-          {/* Image placeholder - photos to be added later */}
-          {tab.hasImage && (
-            <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
-              <span className="text-sm text-gray-400">Photo coming soon</span>
-            </div>
-          )}
-          <p className="text-gray-500 text-sm italic">{tab.body}</p>
-        </div>
+        {tab.hasImage && (
+          <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
+            <span className="text-sm text-gray-400">Photo coming soon</span>
+          </div>
+        )}
+        <p className="text-gray-500 text-sm italic">{tab.body}</p>
+      </div>
     </div>
   );
 };
-
-const PlaceholderSection = ({ title, text }) => (
-  <section className="mb-8">
-    <h2 className="text-xl font-bold mb-2">{title}</h2>
-    <div className="card-accent p-6">
-      <p className="text-gray-500 text-sm italic">{text}</p>
-    </div>
-  </section>
-);
 
 const About = () => (
   <div className="max-w-4xl mx-auto px-4 py-16">
@@ -76,11 +63,6 @@ const About = () => (
       <h2 className="text-xl font-bold mb-2">Our History</h2>
       <HistoryTabs />
     </section>
-
-    <PlaceholderSection title="Mission" text="Add the official mission statement here." />
-    <PlaceholderSection title="Vision" text="Add the official vision statement here." />
-    <PlaceholderSection title="Core Values" text="Add the official core values here." />
-    <PlaceholderSection title="EECP Hymn" text="Add the EECP Hymn lyrics here." />
   </div>
 );
 

@@ -64,7 +64,7 @@ const Footer = () => (
       {/* Social */}
       <div>
         <h3 className="text-white text-sm font-bold uppercase tracking-wide mb-3">Follow Us</h3>
-        
+        <a
           href={COLLEGE_FACEBOOK_URL}
           target="_blank"
           rel="noopener noreferrer"

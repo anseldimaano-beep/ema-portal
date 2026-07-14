@@ -8,6 +8,7 @@ import About from './pages/About';
 import Project from './pages/Project';
 import Government from './pages/Government';
 import CalendarPage from './pages/CalendarPage';
+import Announcements from './pages/Announcements';
 import FAQPage from './pages/FAQPage';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
@@ -22,6 +23,7 @@ const Layout = () => (
         <Route path="/project" element={<Project />} />
         <Route path="/government" element={<Government />} />
         <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/announcements" element={<Announcements />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />

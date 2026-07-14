@@ -28,6 +28,7 @@ const NAV_ITEMS = [
     ]
   },
   { label: 'Calendar', to: '/calendar' },
+  { label: 'News', to: '/announcements' },
   { label: 'FAQ', to: '/faq' },
   { label: 'Contact', to: '/contact' }
 ];

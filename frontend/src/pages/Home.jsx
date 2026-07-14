@@ -96,7 +96,7 @@ const StatsStrip = () => (
       {STATS.map((s) => (
         <div key={s.label}>
           <div className="text-3xl md:text-4xl font-extrabold text-white">{s.value}</div>
-          <div className="text-xs md:text-sm text-primary-200 uppercase tracking-wide mt-1">{s.label}</div>
+          <div className="text-xs md:text-sm font-semibold text-primary-200 uppercase tracking-wide mt-1.5">{s.label}</div>
         </div>
       ))}
     </div>

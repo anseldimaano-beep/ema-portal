@@ -18,6 +18,9 @@ const CATEGORY_FILTERS = [{ value: 'all', label: 'All' }, ...Object.entries(CATE
 
 const AnnouncementRow = ({ a }) => {
   const embedUrl = getVideoEmbedUrl(a.video_url);
+  const [expanded, setExpanded] = useState(false);
+  const text = a.content || a.excerpt || '';
+  const isLong = text.length > 220;
 
   return (
     <div className="card-accent flex flex-col sm:flex-row overflow-hidden">
@@ -45,7 +48,17 @@ const AnnouncementRow = ({ a }) => {
           {a.published_at && <span className="text-gray-400">&middot; {formatDate(a.published_at)}</span>}
         </div>
         <h3 className="font-bold text-gray-900 text-lg mb-2">{a.title}</h3>
-        <p className="text-gray-600 text-sm flex-1">{a.excerpt || a.content}</p>
+        <p className={`text-gray-600 text-sm flex-1 whitespace-pre-line ${expanded ? '' : 'line-clamp-3'}`}>
+          {text}
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded((e) => !e)}
+            className="text-primary-700 text-sm font-semibold mt-2 self-start hover:underline"
+          >
+            {expanded ? 'Read less' : 'Read more'}
+          </button>
+        )}
       </div>
     </div>
   );

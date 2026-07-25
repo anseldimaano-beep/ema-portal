@@ -36,6 +36,10 @@ class Announcement(models.Model):
     # Media
     featured_image = models.ImageField(upload_to='announcements/%Y/%m/', blank=True)
     attachment = models.FileField(upload_to='announcements/attachments/%Y/%m/', blank=True)
+    video_url = models.URLField(
+        blank=True,
+        help_text='YouTube or Facebook video link (e.g. https://youtu.be/xxxx or a Facebook video post URL).'
+    )
 
     # Publishing
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='announcements')

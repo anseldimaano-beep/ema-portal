@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ImageOff } from 'lucide-react';
 import api from '../services/api';
-import { formatDate } from '../utils/helpers';
+import { formatDate, getVideoEmbedUrl } from '../utils/helpers';
 
 const CATEGORY_LABELS = {
   general: 'General',
@@ -16,27 +16,40 @@ const CATEGORY_FILTERS = [{ value: 'all', label: 'All' }, ...Object.entries(CATE
   ([value, label]) => ({ value, label })
 )];
 
-const AnnouncementRow = ({ a }) => (
-  <div className="card-accent flex flex-col sm:flex-row overflow-hidden">
-    <div className="sm:w-56 h-40 sm:h-auto bg-primary-50 flex items-center justify-center shrink-0 overflow-hidden">
-      {a.featured_image ? (
-        <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
-      ) : (
-        <ImageOff className="h-8 w-8 text-primary-200" />
-      )}
-    </div>
-    <div className="p-5 flex flex-col flex-1">
-      <div className="flex items-center gap-2 text-xs mb-2">
-        <span className="uppercase tracking-wide font-bold text-primary-700">
-          {CATEGORY_LABELS[a.category] || 'General'}
-        </span>
-        {a.published_at && <span className="text-gray-400">&middot; {formatDate(a.published_at)}</span>}
+const AnnouncementRow = ({ a }) => {
+  const embedUrl = getVideoEmbedUrl(a.video_url);
+
+  return (
+    <div className="card-accent flex flex-col sm:flex-row overflow-hidden">
+      <div className="sm:w-56 h-40 sm:h-auto bg-primary-50 flex items-center justify-center shrink-0 overflow-hidden">
+        {embedUrl ? (
+          <iframe
+            src={embedUrl}
+            title={a.title}
+            className="w-full h-full"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : a.featured_image ? (
+          <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
+        ) : (
+          <ImageOff className="h-8 w-8 text-primary-200" />
+        )}
       </div>
-      <h3 className="font-bold text-gray-900 text-lg mb-2">{a.title}</h3>
-      <p className="text-gray-600 text-sm flex-1">{a.excerpt || a.content}</p>
+      <div className="p-5 flex flex-col flex-1">
+        <div className="flex items-center gap-2 text-xs mb-2">
+          <span className="uppercase tracking-wide font-bold text-primary-700">
+            {CATEGORY_LABELS[a.category] || 'General'}
+          </span>
+          {a.published_at && <span className="text-gray-400">&middot; {formatDate(a.published_at)}</span>}
+        </div>
+        <h3 className="font-bold text-gray-900 text-lg mb-2">{a.title}</h3>
+        <p className="text-gray-600 text-sm flex-1">{a.excerpt || a.content}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Announcements = () => {
   const [announcements, setAnnouncements] = useState([]);

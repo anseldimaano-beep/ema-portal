@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ImageOff } from 'lucide-react';
 import api from '../services/api';
-import { formatDate } from '../utils/helpers';
+import { formatDate, getVideoEmbedUrl } from '../utils/helpers';
 import eemgSeal from '../assets/eemg_seal.png';
 
 // Hero image + pagination, styled after the Senate site's
@@ -112,27 +112,40 @@ const CATEGORY_LABELS = {
   enrollment: 'Enrollment'
 };
 
-const AnnouncementCard = ({ a }) => (
-  <div className="card-accent flex flex-col">
-    <div className="h-40 bg-primary-50 flex items-center justify-center overflow-hidden">
-      {a.featured_image ? (
-        <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
-      ) : (
-        <ImageOff className="h-8 w-8 text-primary-200" />
-      )}
-    </div>
-    <div className="p-5 flex flex-col flex-1">
-      <div className="flex items-center gap-2 text-xs mb-2">
-        <span className="uppercase tracking-wide font-bold text-primary-700">
-          {CATEGORY_LABELS[a.category] || 'General'}
-        </span>
-        {a.published_at && <span className="text-gray-400">· {formatDate(a.published_at)}</span>}
+const AnnouncementCard = ({ a }) => {
+  const embedUrl = getVideoEmbedUrl(a.video_url);
+
+  return (
+    <div className="card-accent flex flex-col">
+      <div className="h-40 bg-primary-50 flex items-center justify-center overflow-hidden">
+        {embedUrl ? (
+          <iframe
+            src={embedUrl}
+            title={a.title}
+            className="w-full h-full"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : a.featured_image ? (
+          <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
+        ) : (
+          <ImageOff className="h-8 w-8 text-primary-200" />
+        )}
       </div>
-      <h3 className="font-bold text-gray-900 mb-2">{a.title}</h3>
-      <p className="text-gray-600 text-sm flex-1">{a.excerpt || a.content}</p>
+      <div className="p-5 flex flex-col flex-1">
+        <div className="flex items-center gap-2 text-xs mb-2">
+          <span className="uppercase tracking-wide font-bold text-primary-700">
+            {CATEGORY_LABELS[a.category] || 'General'}
+          </span>
+          {a.published_at && <span className="text-gray-400">· {formatDate(a.published_at)}</span>}
+        </div>
+        <h3 className="font-bold text-gray-900 mb-2">{a.title}</h3>
+        <p className="text-gray-600 text-sm flex-1">{a.excerpt || a.content}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const SITE_SECTIONS = [
   {

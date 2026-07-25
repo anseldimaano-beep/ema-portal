@@ -12,7 +12,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'slug', 'content', 'excerpt', 'category',
             'category_display', 'priority', 'priority_display',
-            'featured_image', 'attachment', 'author_name',
+            'featured_image', 'attachment', 'video_url', 'author_name',
             'is_published', 'is_pinned', 'published_at', 'expires_at',
             'view_count', 'created_at', 'updated_at'
         ]
@@ -26,7 +26,7 @@ class AnnouncementListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = ['id', 'title', 'slug', 'excerpt', 'category', 'priority', 
-                  'featured_image', 'is_pinned', 'published_at', 'author_name']
+                  'featured_image', 'video_url', 'is_pinned', 'published_at', 'author_name']
 
 
 class AcademicCalendarSerializer(serializers.ModelSerializer):

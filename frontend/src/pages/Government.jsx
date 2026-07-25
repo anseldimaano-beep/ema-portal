@@ -95,9 +95,19 @@ const NameList = ({ names, chair }) => (
   </ul>
 );
 
+// Mirrors the pill-tab pattern used on the About page's "Our History"
+// section: one row of rounded-full buttons, one section rendered at a time.
+const GOV_TABS = [
+  { key: 'officers', label: 'Officers' },
+  { key: 'senators', label: 'Senators' },
+  { key: 'representatives', label: 'Representatives' },
+  { key: 'committees', label: 'Committees' }
+];
+
 const Government = () => {
   const [senators, setSenators] = useState([]);
   const [committees, setCommittees] = useState([]);
+  const [active, setActive] = useState(GOV_TABS[0].key);
   const { hash } = useLocation();
 
   useEffect(() => {
@@ -112,16 +122,14 @@ const Government = () => {
       .catch(() => setCommittees([]));
   }, []);
 
-  // React Router doesn't auto-scroll to a #hash target on client-side
-  // navigation (only real browser page loads do that), so do it manually
-  // once the target section has rendered.
+  // Navbar links to /government#senators and /government#committees. Same
+  // approach as About's HistoryTabs: pick up the hash and switch the active
+  // tab to match, since only one section renders at a time now.
   useEffect(() => {
-    if (!hash) return;
-    const id = hash.replace('#', '');
-    const timer = setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-    return () => clearTimeout(timer);
+    const key = hash.replace('#', '');
+    if (GOV_TABS.some((t) => t.key === key)) {
+      setActive(key);
+    }
   }, [hash]);
 
   // Prefer live API data once the backend is seeded; otherwise show the
@@ -137,79 +145,103 @@ const Government = () => {
         Officers, senators, representatives, and committees of the EMA EMITS Model Government, A.Y. 2026-2027.
       </p>
 
+      <div className="flex flex-wrap gap-2 mb-10">
+        {GOV_TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActive(t.key)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+              active === t.key
+                ? 'bg-primary-800 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* Officers */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Officers</h2>
-        <div className="grid sm:grid-cols-2 gap-6">
-          {OFFICERS.map((o) => (
-            <div key={o.title} className="card-accent p-6">
-              <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.title}</p>
-              <p className="text-lg font-bold text-gray-900">{o.name}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {active === 'officers' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Officers</h2>
+          <div className="grid sm:grid-cols-2 gap-6">
+            {OFFICERS.map((o) => (
+              <div key={o.title} className="card-accent p-6">
+                <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.title}</p>
+                <p className="text-lg font-bold text-gray-900">{o.name}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Senators */}
-      <section id="senators" className="mb-16 scroll-mt-24">
-        <h2 className="text-2xl font-bold mb-6">Senators</h2>
-        {hasApiSenators ? (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {senators.map((s) => (
-              <div key={s.id} className="card py-3 px-4">
-                <p className="font-semibold text-gray-900">{s.name}</p>
-                {s.position_display && <p className="text-xs text-primary-700 mt-0.5">{s.position_display}</p>}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {SENATORS.map((name) => (
-              <div key={name} className="card py-3 px-4">
-                <p className="font-semibold text-gray-900">{name}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      {active === 'senators' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Senators</h2>
+          {hasApiSenators ? (
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {senators.map((s) => (
+                <div key={s.id} className="card py-3 px-4">
+                  <p className="font-semibold text-gray-900">{s.name}</p>
+                  {s.position_display && <p className="text-xs text-primary-700 mt-0.5">{s.position_display}</p>}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {SENATORS.map((name) => (
+                <div key={name} className="card py-3 px-4">
+                  <p className="font-semibold text-gray-900">{name}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Representatives */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Representatives</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {REPRESENTATIVES.map((r) => (
-            <div key={r.group} className="card-accent p-6">
-              <h3 className="font-bold text-primary-900">{r.group}</h3>
-              <NameList names={r.members} />
-            </div>
-          ))}
-        </div>
-      </section>
+      {active === 'representatives' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Representatives</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {REPRESENTATIVES.map((r) => (
+              <div key={r.group} className="card-accent p-6">
+                <h3 className="font-bold text-primary-900">{r.group}</h3>
+                <NameList names={r.members} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Committees */}
-      <section id="committees" className="scroll-mt-24">
-        <h2 className="text-2xl font-bold mb-6">Committees</h2>
-        {hasApiCommittees ? (
-          <div className="grid md:grid-cols-2 gap-6">
-            {committees.map((c) => (
-              <div key={c.id} className="card-accent p-6">
-                <h3 className="font-bold text-lg text-primary-900">{c.name}</h3>
-                {c.description && <p className="text-gray-600 mt-2 text-sm">{c.description}</p>}
-                {c.members?.length > 0 && <NameList names={c.members.map((m) => m.name)} />}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {COMMITTEES.map((c) => (
-              <div key={c.name} className="card-accent p-6">
-                <h3 className="font-bold text-primary-900">{c.name}</h3>
-                <NameList names={c.members} chair={c.chair} />
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      {active === 'committees' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Committees</h2>
+          {hasApiCommittees ? (
+            <div className="grid md:grid-cols-2 gap-6">
+              {committees.map((c) => (
+                <div key={c.id} className="card-accent p-6">
+                  <h3 className="font-bold text-lg text-primary-900">{c.name}</h3>
+                  {c.description && <p className="text-gray-600 mt-2 text-sm">{c.description}</p>}
+                  {c.members?.length > 0 && <NameList names={c.members.map((m) => m.name)} />}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {COMMITTEES.map((c) => (
+                <div key={c.name} className="card-accent p-6">
+                  <h3 className="font-bold text-primary-900">{c.name}</h3>
+                  <NameList names={c.members} chair={c.chair} />
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 };

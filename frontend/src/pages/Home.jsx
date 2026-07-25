@@ -109,8 +109,7 @@ const CATEGORY_LABELS = {
   administrative: 'Administrative',
   event: 'Event',
   emergency: 'Emergency',
-  enrollment: 'Enrollment',
-  scholarship: 'Scholarship'
+  enrollment: 'Enrollment'
 };
 
 const AnnouncementCard = ({ a }) => (

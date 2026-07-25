@@ -27,9 +27,6 @@ const HeroCarousel = ({ slides }) => {
           <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
             {slide.title}
           </h1>
-          <p className="text-gray-600 text-base md:text-lg mb-6 max-w-xl">
-            {slide.excerpt || slide.content}
-          </p>
           {slide.published_at && (
             <p className="text-sm text-gray-400 mb-8">{formatDate(slide.published_at)}</p>
           )}

@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.conf import settings
-from django.core.mail import send_mail
 from django.utils import timezone
 from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+from .email_utils import send_via_resend
 
 
 @admin.register(Announcement)
@@ -90,19 +89,14 @@ class ContactMessageAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         if response_changed:
-            try:
-                send_mail(
-                    subject=f'Re: {obj.subject}',
-                    message=(
-                        f'Hi {obj.name},\n\n'
-                        f'{obj.response}\n\n'
-                        f'---\n'
-                        f'This is a reply to your message sent to EMA EMITS Model Government:\n'
-                        f'"{obj.message}"'
-                    ),
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[obj.email],
-                    fail_silently=True,
-                )
-            except Exception:
-                pass
+            send_via_resend(
+                to_email=obj.email,
+                subject=f'Re: {obj.subject}',
+                text_body=(
+                    f'Hi {obj.name},\n\n'
+                    f'{obj.response}\n\n'
+                    f'---\n'
+                    f'This is a reply to your message sent to EMA EMITS Model Government:\n'
+                    f'"{obj.message}"'
+                ),
+            )

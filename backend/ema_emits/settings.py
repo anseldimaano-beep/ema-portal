@@ -188,12 +188,19 @@ EMAIL_PORT = env.int('EMAIL_PORT', default=587)
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+# Fail fast instead of hanging the whole request if the SMTP connection is blocked or slow
+EMAIL_TIMEOUT = 10
 
 # Base URL of the frontend, used to build links inside emails (verification, password reset)
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000')
 
 # Where new contact-form submissions get emailed to
 ADMIN_EMAIL = env('ADMIN_EMAIL', default='admin@emaemits.edu.ph')
+
+# Resend (https://resend.com) sends email over a normal HTTPS API call,
+# which works reliably on hosts like Render that restrict outbound SMTP.
+RESEND_API_KEY = env('RESEND_API_KEY', default='')
+RESEND_FROM_EMAIL = env('RESEND_FROM_EMAIL', default='onboarding@resend.dev')
 
 # Logging
 LOGGING = {

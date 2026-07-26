@@ -4,6 +4,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
+from django.conf import settings
+from django.core.mail import send_mail
 from datetime import timedelta
 from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
 from .serializers import (
@@ -212,6 +214,27 @@ class ContactMessageCreateView(generics.CreateAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        message = serializer.save()
+        try:
+            send_mail(
+                subject=f'New contact form message: {message.subject}',
+                message=(
+                    f'New message from the EEMG portal contact form.\n\n'
+                    f'Name: {message.name}\n'
+                    f'Email: {message.email}\n'
+                    f'Subject: {message.subject}\n\n'
+                    f'Message:\n{message.message}\n\n'
+                    f'Reply from the admin panel: {settings.FRONTEND_URL}'
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.ADMIN_EMAIL],
+                fail_silently=True,
+            )
+        except Exception:
+            # Never let an email failure block the form submission itself.
+            pass
 
 
 class ContactMessageListView(generics.ListAPIView):

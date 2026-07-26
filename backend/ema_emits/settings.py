@@ -192,6 +192,9 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 # Base URL of the frontend, used to build links inside emails (verification, password reset)
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000')
 
+# Where new contact-form submissions get emailed to
+ADMIN_EMAIL = env('ADMIN_EMAIL', default='admin@emaemits.edu.ph')
+
 # Logging
 LOGGING = {
     'version': 1,

@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.conf import settings
+from django.core.mail import send_mail
+from django.utils import timezone
 from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
 
 
@@ -16,7 +19,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'content', 'excerpt', 'category', 'priority')
         }),
         ('Media', {
-            'fields': ('featured_image', 'attachment', 'video_url'),
+            'fields': ('featured_image', 'attachment'),
             'classes': ('collapse',)
         }),
         ('Publishing', {
@@ -71,5 +74,35 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'subject', 'status', 'created_at']
     list_filter = ['status']
     search_fields = ['name', 'email', 'subject']
-    readonly_fields = ['created_at']
+    readonly_fields = ['created_at', 'responded_by', 'responded_at']
     ordering = ['-created_at']
+
+    def save_model(self, request, obj, form, change):
+        # Only fire an email the moment a response is newly written or edited.
+        response_changed = 'response' in form.changed_data and obj.response.strip()
+
+        if response_changed:
+            obj.responded_by = request.user
+            obj.responded_at = timezone.now()
+            if obj.status == obj.Status.NEW:
+                obj.status = obj.Status.RESOLVED
+
+        super().save_model(request, obj, form, change)
+
+        if response_changed:
+            try:
+                send_mail(
+                    subject=f'Re: {obj.subject}',
+                    message=(
+                        f'Hi {obj.name},\n\n'
+                        f'{obj.response}\n\n'
+                        f'---\n'
+                        f'This is a reply to your message sent to EMA EMITS Model Government:\n'
+                        f'"{obj.message}"'
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[obj.email],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass

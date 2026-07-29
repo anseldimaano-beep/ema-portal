@@ -17,8 +17,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
         ('Content', {
             'fields': ('title', 'slug', 'content', 'excerpt', 'category', 'priority')
         }),
-        ('Media', {
-            'fields': ('featured_image', 'attachment'),
+        (''Media', {
+            'fields': ('featured_image', 'attachment', 'video_url'),
             'classes': ('collapse',)
         }),
         ('Publishing', {

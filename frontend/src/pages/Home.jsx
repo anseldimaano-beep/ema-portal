@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ImageOff } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '../services/api';
-import { formatDate, getVideoEmbedUrl } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
 import eemgSeal from '../assets/eemg_seal.png';
+import VideoEmbed from '../components/VideoEmbed';
 
 // Hero image + pagination, styled after the Senate site's
 // "Latest Photo Releases" module: an eyebrow label, headline, excerpt and
@@ -110,25 +111,10 @@ const CATEGORY_LABELS = {
 };
 
 const AnnouncementCard = ({ a }) => {
-  const embedUrl = getVideoEmbedUrl(a.video_url);
-
   return (
     <div className="card-accent flex flex-col">
       <div className="h-40 bg-primary-50 flex items-center justify-center overflow-hidden">
-        {embedUrl ? (
-          <iframe
-            src={embedUrl}
-            title={a.title}
-            className="w-full h-full"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        ) : a.featured_image ? (
-          <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
-        ) : (
-          <ImageOff className="h-8 w-8 text-primary-200" />
-        )}
+        <VideoEmbed videoUrl={a.video_url} featuredImage={a.featured_image} title={a.title} />
       </div>
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 text-xs mb-2">

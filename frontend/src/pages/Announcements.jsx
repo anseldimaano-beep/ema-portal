@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ImageOff } from 'lucide-react';
 import api from '../services/api';
-import { formatDate, getVideoEmbedUrl } from '../utils/helpers';
+import { formatDate } from '../utils/helpers';
+import VideoEmbed from '../components/VideoEmbed';
 
 const CATEGORY_LABELS = {
   general: 'General',
@@ -17,7 +17,6 @@ const CATEGORY_FILTERS = [{ value: 'all', label: 'All' }, ...Object.entries(CATE
 )];
 
 const AnnouncementRow = ({ a }) => {
-  const embedUrl = getVideoEmbedUrl(a.video_url);
   const [expanded, setExpanded] = useState(false);
   const text = a.content || a.excerpt || '';
   const isLong = text.length > 220;
@@ -25,20 +24,7 @@ const AnnouncementRow = ({ a }) => {
   return (
     <div className="card-accent flex flex-col sm:flex-row overflow-hidden">
       <div className="sm:w-56 h-40 sm:h-auto bg-primary-50 flex items-center justify-center shrink-0 overflow-hidden">
-        {embedUrl ? (
-          <iframe
-            src={embedUrl}
-            title={a.title}
-            className="w-full h-full"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        ) : a.featured_image ? (
-          <img src={a.featured_image} alt={a.title} className="w-full h-full object-cover" />
-        ) : (
-          <ImageOff className="h-8 w-8 text-primary-200" />
-        )}
+        <VideoEmbed videoUrl={a.video_url} featuredImage={a.featured_image} title={a.title} />
       </div>
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 text-xs mb-2">

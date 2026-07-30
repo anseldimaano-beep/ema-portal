@@ -19,4 +19,8 @@ export const getVideoEmbedUrl = (url) => {
   }
 
   return null;
+  export const isVideoFile = (url) => {
+  if (!url) return false;
+  return /\.(mp4|webm|ogg|mov|m4v)$/i.test(url.split('?')[0]);
+
 };

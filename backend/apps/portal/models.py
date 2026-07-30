@@ -34,7 +34,15 @@ class Announcement(models.Model):
     priority = models.CharField(max_length=10, choices=Priority.choices, default=Priority.NORMAL)
 
     # Media
-    featured_image = models.ImageField(upload_to='announcements/%Y/%m/', blank=True)
+    from cloudinary.models import CloudinaryField
+
+    # Media
+    media = CloudinaryField(
+        resource_type="auto",
+        blank=True,
+        null=True,
+        help_text="Upload an image or video."
+    )
     attachment = models.FileField(upload_to='announcements/attachments/%Y/%m/', blank=True)
     video_url = models.URLField(
         blank=True,

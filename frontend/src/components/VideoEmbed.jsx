@@ -31,7 +31,7 @@ const VideoEmbed = ({ videoUrl, featuredImage, attachment, title, className = ''
           />
         </div>
         {isFacebook && (
-          
+  
             href={videoUrl}
             target="_blank"
             rel="noopener noreferrer"

@@ -45,7 +45,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'content', 'excerpt', 'category', 'priority')
         }),
         ('Media', {
-            'fields': ('featured_image', 'attachment', 'video_url', 'video_preview'),
+            'fields': ('featured_image', 'attachment', 'video_url', 'video_file', 'video_preview'),
             'classes': ('collapse',)
         }),
         ('Publishing', {
@@ -54,8 +54,21 @@ class AnnouncementAdmin(admin.ModelAdmin):
     )
 
     def video_preview(self, obj):
+        if obj.video_file:
+            return format_html(
+                '<div style="max-width:400px;">'
+                '<video src="{}" width="400" height="220" controls preload="metadata" '
+                'style="background:#000;border-radius:4px;"></video>'
+                '<p style="margin-top:6px;font-size:12px;color:#555;">'
+                'Your own uploaded video. This takes priority over the Video URL field below '
+                'if both are set.'
+                '</p>'
+                '</div>',
+                obj.video_file.url,
+            )
+
         if not obj.video_url:
-            return 'Enter a video URL above, then save to preview the embed here.'
+            return 'Upload a video file or enter a video URL above, then save to preview it here.'
 
         embed_src = _video_embed_src(obj.video_url)
         if not embed_src:

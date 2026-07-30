@@ -6,6 +6,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 
+from .storage_backends import get_attachment_storage, get_video_storage
+
 User = get_user_model()
 
 
@@ -36,7 +38,9 @@ class Announcement(models.Model):
 
     # Media
     featured_image = models.ImageField(upload_to='announcements/%Y/%m/', blank=True)
-    attachment = models.FileField(upload_to='announcements/attachments/%Y/%m/', blank=True)
+    attachment = models.FileField(
+        upload_to='announcements/attachments/%Y/%m/', blank=True, storage=get_attachment_storage
+    )
     video_url = models.URLField(
         blank=True,
         help_text='YouTube or Facebook video link (e.g. https://youtu.be/xxxx or a Facebook video post URL).'
@@ -44,6 +48,7 @@ class Announcement(models.Model):
     video_file = models.FileField(
         upload_to='announcements/videos/%Y/%m/',
         blank=True,
+        storage=get_video_storage,
         validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov', 'webm', 'ogg'])],
         help_text=(
             'Upload your own video (mp4, mov, webm, or ogg) to play directly on the site, '

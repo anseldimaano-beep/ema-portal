@@ -1,9 +1,12 @@
 """
 Portal Content Models - Phase 1 Public Information
 """
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+
+from .storage_backends import get_attachment_storage, get_video_storage
 
 User = get_user_model()
 
@@ -34,19 +37,24 @@ class Announcement(models.Model):
     priority = models.CharField(max_length=10, choices=Priority.choices, default=Priority.NORMAL)
 
     # Media
-    from cloudinary.models import CloudinaryField
-
-    # Media
-    media = CloudinaryField(
-        resource_type="auto",
-        blank=True,
-        null=True,
-        help_text="Upload an image or video."
+    featured_image = models.ImageField(upload_to='announcements/%Y/%m/', blank=True)
+    attachment = models.FileField(
+        upload_to='announcements/attachments/%Y/%m/', blank=True, storage=get_attachment_storage
     )
-    attachment = models.FileField(upload_to='announcements/attachments/%Y/%m/', blank=True)
     video_url = models.URLField(
         blank=True,
         help_text='YouTube or Facebook video link (e.g. https://youtu.be/xxxx or a Facebook video post URL).'
+    )
+    video_file = models.FileField(
+        upload_to='announcements/videos/%Y/%m/',
+        blank=True,
+        storage=get_video_storage,
+        validators=[FileExtensionValidator(allowed_extensions=['mp4', 'mov', 'webm', 'ogg'])],
+        help_text=(
+            'Upload your own video (mp4, mov, webm, or ogg) to play directly on the site, '
+            'no YouTube/Facebook link needed. If both this and Video URL are set, this '
+            'uploaded video takes priority.'
+        ),
     )
 
     # Publishing

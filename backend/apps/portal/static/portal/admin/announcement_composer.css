@@ -1,8 +1,8 @@
-/* Facebook-style post composer skin for the Announcement admin form.
+/* Facebook-style post composer skin for the Announcement admin form — dark theme.
    Scoped entirely to body.model-announcement so no other admin page is affected. */
 
 body.model-announcement #content-main {
-  background: #eef0f3;
+  background: #18191a;
   padding: 24px 16px 80px;
 }
 
@@ -22,17 +22,25 @@ body.model-announcement .object-tools {
 body.model-announcement #announcement_form {
   max-width: 640px;
   margin: 0 auto;
-  background: #ffffff;
+  background: #242526;
   border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.08);
+  box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.4);
   padding: 18px 20px 16px;
-  color: #050505;
-  color-scheme: light; /* stop browser/OS dark mode from re-darkening native form controls */
+  color: #e4e6eb;
+  color-scheme: dark; /* keep native controls (date picker, dropdown arrows) dark too */
 }
 
-/* Blanket reset: every field in this form gets the same light background + dark
-   text, regardless of the admin's light/dark theme. More specific rules further
-   down (Title, Content, Category/Priority pills, etc.) override this on top. */
+body.model-announcement #announcement_form > div {
+  max-width: none;
+}
+
+body.model-announcement .errornote {
+  border-radius: 8px;
+}
+
+/* Blanket reset: every field in this form gets the same dark background + light
+   text, regardless of the admin's light/dark theme setting. More specific rules
+   further down (Title, Content, Category/Priority pills, etc.) refine this. */
 body.model-announcement .field-title input[type="text"],
 body.model-announcement .field-slug input[type="text"],
 body.model-announcement .field-content textarea,
@@ -44,18 +52,10 @@ body.model-announcement .field-author select,
 body.model-announcement .field-video_url input,
 body.model-announcement .field-published_at input,
 body.model-announcement .field-expires_at input {
-  background-color: #ffffff;
-  color: #1c1e21;
-  border: 1px solid #ccd0d5;
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+  border: 1px solid #3e4042;
   border-radius: 6px;
-}
-
-body.model-announcement #announcement_form > div {
-  max-width: none;
-}
-
-body.model-announcement .errornote {
-  border-radius: 8px;
 }
 
 /* ---- Composer header (injected by JS): avatar + "posting as" ---- */
@@ -65,13 +65,13 @@ body.model-announcement .errornote {
   gap: 10px;
   padding-bottom: 12px;
   margin-bottom: 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #3e4042;
 }
 .fb-composer-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #0866ff;
+  background: #2374e1;
   color: #fff;
   display: flex;
   align-items: center;
@@ -87,11 +87,11 @@ body.model-announcement .errornote {
 .fb-composer-name {
   font-weight: 600;
   font-size: 15px;
-  color: #050505;
+  color: #e4e6eb;
 }
 .fb-composer-audience {
   font-size: 12px;
-  color: #65676b;
+  color: #b0b3b8;
 }
 
 /* ---- Kill the default Django fieldset chrome ---- */
@@ -110,8 +110,8 @@ body.model-announcement .fieldset-heading {
 
 /* Media fieldset is rendered as <details><summary> because of classes=('collapse',) */
 body.model-announcement fieldset.collapse {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid #3e4042;
+  border-bottom: 1px solid #3e4042;
   margin: 10px 0;
   padding: 4px 0;
 }
@@ -124,13 +124,13 @@ body.model-announcement fieldset.collapse summary {
   font-size: 14px;
   background: transparent !important;
   border: none !important;
-  color: #050505 !important;
+  color: #e4e6eb !important;
 }
 body.model-announcement fieldset.collapse summary::before {
   content: "📎 Add photo, video, or attachment";
 }
 body.model-announcement fieldset.collapse summary:hover {
-  background: #f2f3f5;
+  background: #3a3b3c !important;
 }
 body.model-announcement fieldset.collapse summary::-webkit-details-marker {
   display: none;
@@ -139,22 +139,24 @@ body.model-announcement fieldset.collapse summary::-webkit-details-marker {
 /* ---- Title field: big bold "headline" input ---- */
 body.model-announcement .field-title label {
   font-size: 12px;
-  color: #65676b;
+  color: #b0b3b8;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .02em;
 }
 body.model-announcement .field-title input[type="text"] {
   width: 100%;
-  border: none;
-  border-bottom: 2px solid #f0f2f5;
+  border: none !important;
+  border-bottom: 2px solid #3e4042 !important;
+  border-radius: 0;
+  background: transparent !important;
   font-size: 20px;
   font-weight: 700;
   padding: 8px 4px;
-  color: #050505;
+  color: #e4e6eb;
 }
 body.model-announcement .field-title input[type="text"]:focus {
-  border-bottom-color: #0866ff;
+  border-bottom-color: #2374e1 !important;
   outline: none;
 }
 
@@ -165,7 +167,8 @@ body.model-announcement .field-content label {
 body.model-announcement .field-content textarea {
   width: 100%;
   min-height: 130px;
-  border: none;
+  border: none !important;
+  background: transparent !important;
   resize: none;
   font-size: 16px;
   line-height: 1.4;
@@ -176,27 +179,27 @@ body.model-announcement .field-content textarea:focus {
   outline: none;
 }
 body.model-announcement .field-content textarea::placeholder {
-  color: #90949c;
+  color: #8a8d91;
 }
 
 /* ---- Excerpt: demote to a small optional helper ---- */
 body.model-announcement .field-excerpt {
-  background: #f7f8fa;
+  background: #3a3b3c;
   border-radius: 8px;
   padding: 6px 10px !important;
 }
 body.model-announcement .field-excerpt label {
   font-size: 11px;
-  color: #65676b;
+  color: #b0b3b8;
   font-weight: 600;
 }
 body.model-announcement .field-excerpt textarea,
 body.model-announcement .field-excerpt input {
   width: 100%;
-  border: none;
-  background: transparent;
+  border: none !important;
+  background: transparent !important;
   font-size: 13px;
-  color: #444;
+  color: #d3d5d8;
 }
 
 /* ---- Category / Priority: side-by-side pill selects ---- */
@@ -212,7 +215,7 @@ body.model-announcement .field-category label,
 body.model-announcement .field-priority label {
   display: block;
   font-size: 11px;
-  color: #65676b;
+  color: #b0b3b8;
   font-weight: 600;
   margin-bottom: 2px;
 }
@@ -220,19 +223,20 @@ body.model-announcement .field-category select,
 body.model-announcement .field-priority select {
   width: 100%;
   border-radius: 999px;
-  border: 1px solid #ccd0d5;
+  border: 1px solid #3e4042;
   padding: 6px 12px;
   font-size: 13px;
   font-weight: 600;
-  background: #f0f2f5;
+  background: #3a3b3c;
+  color: #e4e6eb;
   cursor: pointer;
 }
 
 /* Priority color accents, toggled via JS data-priority attribute on the select */
-body.model-announcement select[data-priority="low"] { background:#eef1f5; border-color:#c7ccd1; color:#4b5563; }
-body.model-announcement select[data-priority="normal"] { background:#e7f0ff; border-color:#0866ff; color:#0866ff; }
-body.model-announcement select[data-priority="high"] { background:#fff2e2; border-color:#e08600; color:#a15c00; }
-body.model-announcement select[data-priority="urgent"] { background:#fde8e8; border-color:#d9534f; color:#b02a2a; }
+body.model-announcement select[data-priority="low"] { background:#3a3b3c; border-color:#4e4f50; color:#b0b3b8; }
+body.model-announcement select[data-priority="normal"] { background:#1a3a5c; border-color:#2374e1; color:#8bb9f5; }
+body.model-announcement select[data-priority="high"] { background:#4d3a12; border-color:#e08600; color:#f0b95a; }
+body.model-announcement select[data-priority="urgent"] { background:#4c1f1f; border-color:#d9534f; color:#f28b8b; }
 
 /* ---- Media fields (image / attachment / video url) ---- */
 body.model-announcement .field-featured_image,
@@ -244,7 +248,7 @@ body.model-announcement .field-featured_image label,
 body.model-announcement .field-attachment label,
 body.model-announcement .field-video_url label {
   font-size: 12px;
-  color: #65676b;
+  color: #b0b3b8;
   font-weight: 600;
   display: block;
   margin-bottom: 4px;
@@ -253,8 +257,16 @@ body.model-announcement .field-video_url input[type="url"],
 body.model-announcement .field-video_url input[type="text"] {
   width: 100%;
   border-radius: 8px;
-  border: 1px solid #ccd0d5;
+  border: 1px solid #3e4042 !important;
+  background: #3a3b3c !important;
   padding: 8px 10px;
+}
+body.model-announcement .field-featured_image a,
+body.model-announcement .field-attachment a,
+body.model-announcement .field-video_url a,
+body.model-announcement .field-featured_image p,
+body.model-announcement .field-attachment p {
+  color: #8bb9f5;
 }
 body.model-announcement .fb-image-preview {
   margin-top: 8px;
@@ -266,7 +278,7 @@ body.model-announcement .fb-image-preview {
 }
 body.model-announcement .readonly .fb-video-note {
   font-size: 12px;
-  color: #65676b;
+  color: #b0b3b8;
 }
 
 /* ---- Publishing fieldset: toggle switches for booleans ---- */
@@ -289,7 +301,7 @@ body.model-announcement .field-is_pinned input[type="checkbox"] {
   width: 36px;
   height: 20px;
   border-radius: 999px;
-  background: #ccd0d5;
+  background: #4e4f50;
   position: relative;
   cursor: pointer;
   outline: none;
@@ -305,12 +317,12 @@ body.model-announcement .field-is_pinned input[type="checkbox"]::before {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #fff;
+  background: #e4e6eb;
   transition: transform .15s ease;
 }
 body.model-announcement .field-is_published input[type="checkbox"]:checked,
 body.model-announcement .field-is_pinned input[type="checkbox"]:checked {
-  background: #0866ff;
+  background: #2374e1;
 }
 body.model-announcement .field-is_published input[type="checkbox"]:checked::before,
 body.model-announcement .field-is_pinned input[type="checkbox"]:checked::before {
@@ -320,7 +332,7 @@ body.model-announcement .field-is_published label,
 body.model-announcement .field-is_pinned label {
   font-size: 13px;
   font-weight: 600;
-  color: #050505;
+  color: #e4e6eb;
 }
 
 body.model-announcement .field-published_at,
@@ -332,7 +344,7 @@ body.model-announcement .field-published_at label,
 body.model-announcement .field-expires_at label,
 body.model-announcement .field-author label {
   font-size: 12px;
-  color: #65676b;
+  color: #b0b3b8;
   font-weight: 600;
 }
 
@@ -349,7 +361,7 @@ body.model-announcement .submit-row {
   padding: 0;
 }
 body.model-announcement .submit-row input[name="_save"] {
-  background: #0866ff;
+  background: #2374e1;
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -358,21 +370,21 @@ body.model-announcement .submit-row input[name="_save"] {
   padding: 10px 28px;
 }
 body.model-announcement .submit-row input[name="_save"]:hover {
-  background: #0656d6;
+  background: #1b5bb0;
 }
 /* Keep these available but visually secondary/small, instead of removing them */
 body.model-announcement .submit-row input[name="_addanother"],
 body.model-announcement .submit-row input[name="_saveasnew"],
 body.model-announcement .submit-row input[name="_continue"] {
   background: transparent;
-  color: #65676b;
-  border: 1px solid #ccd0d5;
+  color: #b0b3b8;
+  border: 1px solid #3e4042;
   border-radius: 8px;
   font-size: 12px;
   padding: 8px 12px;
 }
 body.model-announcement .submit-row .deletelink {
   margin-right: auto;
-  color: #d9534f;
+  color: #f28b8b;
   font-size: 12px;
 }

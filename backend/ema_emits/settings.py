@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
+    # Media storage (Cloudinary auto-activates only if credentials are set below)
     'cloudinary_storage',
     'cloudinary',
 
@@ -125,24 +127,35 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files — stored on Cloudinary so uploads survive Render restarts/redeploys
-# (Render's free tier has no persistent disk, so local storage gets wiped)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Cloudinary (persistent media storage). Render's filesystem is ephemeral —
+# without this, every uploaded image/attachment/video disappears on each
+# redeploy. Falls back to local disk automatically when these env vars
+# aren't set (e.g. local development), so `docker compose up` needs no
+# Cloudinary account at all.
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME', default=''),
     'API_KEY': env('CLOUDINARY_API_KEY', default=''),
     'API_SECRET': env('CLOUDINARY_API_SECRET', default=''),
 }
 
+# NOTE: Django 6.0 no longer reads the old STATICFILES_STORAGE /
+# DEFAULT_FILE_STORAGE settings at all (they're silently ignored, not even
+# an error) — STORAGES is the only setting that actually takes effect now.
 STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    'default': {
+        'BACKEND': (
+            'cloudinary_storage.storage.MediaCloudinaryStorage'
+            if CLOUDINARY_STORAGE['CLOUD_NAME']
+            else 'django.core.files.storage.FileSystemStorage'
+        ),
     },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
 

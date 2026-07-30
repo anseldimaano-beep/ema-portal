@@ -241,12 +241,14 @@ body.model-announcement select[data-priority="urgent"] { background:#4c1f1f; bor
 /* ---- Media fields (image / attachment / video url) ---- */
 body.model-announcement .field-featured_image,
 body.model-announcement .field-attachment,
-body.model-announcement .field-video_url {
+body.model-announcement .field-video_url,
+body.model-announcement .field-video_file {
   padding: 6px 0 !important;
 }
 body.model-announcement .field-featured_image label,
 body.model-announcement .field-attachment label,
-body.model-announcement .field-video_url label {
+body.model-announcement .field-video_url label,
+body.model-announcement .field-video_file label {
   font-size: 12px;
   color: #b0b3b8;
   font-weight: 600;
@@ -275,6 +277,14 @@ body.model-announcement .fb-image-preview {
   border-radius: 10px;
   display: none;
   object-fit: cover;
+}
+body.model-announcement .fb-video-preview {
+  margin-top: 8px;
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 10px;
+  display: none;
+  background: #000;
 }
 body.model-announcement .readonly .fb-video-note {
   font-size: 12px;

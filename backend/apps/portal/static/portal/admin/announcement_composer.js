@@ -9,6 +9,7 @@
     autoGrowTextarea();
     tagPriorityColor();
     setupImagePreview();
+    setupVideoPreview();
     relabelPostButton();
     addPlaceholders();
 
@@ -100,6 +101,25 @@
             img.style.display = 'block';
           };
           reader.readAsDataURL(input.files[0]);
+        }
+      });
+    }
+
+    function setupVideoPreview() {
+      var input = document.getElementById('id_video_file');
+      if (!input) return;
+
+      var wrapper = input.closest('.flex-container') || input.parentElement;
+      var video = document.createElement('video');
+      video.className = 'fb-video-preview';
+      video.controls = true;
+      wrapper.appendChild(video);
+
+      input.addEventListener('change', function () {
+        if (input.files && input.files[0]) {
+          var url = URL.createObjectURL(input.files[0]);
+          video.src = url;
+          video.style.display = 'block';
         }
       });
     }

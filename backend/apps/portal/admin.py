@@ -36,6 +36,10 @@ class AnnouncementAdmin(admin.ModelAdmin):
     ordering = ['-is_pinned', '-published_at']
     readonly_fields = ['video_preview']
 
+    class Media:
+        css = {'all': ('portal/admin/announcement_composer.css',)}
+        js = ('portal/admin/announcement_composer.js',)
+
     fieldsets = (
         ('Content', {
             'fields': ('title', 'slug', 'content', 'excerpt', 'category', 'priority')

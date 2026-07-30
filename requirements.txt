@@ -18,4 +18,4 @@ django-debug-toolbar==7.0.0
 python-dotenv==1.2.2
 requests==2.34.2
 django-cloudinary-storage
-   cloudinary
+cloudinary

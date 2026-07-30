@@ -24,7 +24,7 @@ const AnnouncementRow = ({ a }) => {
   return (
     <div className="card-accent flex flex-col sm:flex-row overflow-hidden">
       <div className="sm:w-56 h-40 sm:h-auto bg-primary-50 flex items-center justify-center shrink-0 overflow-hidden">
-        <VideoEmbed videoUrl={a.video_url} featuredImage={a.featured_image} attachment={a.attachment} title={a.title} />
+        <VideoEmbed videoFile={a.video_file} videoUrl={a.video_url} featuredImage={a.featured_image} title={a.title} />
       </div>
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center gap-2 text-xs mb-2">

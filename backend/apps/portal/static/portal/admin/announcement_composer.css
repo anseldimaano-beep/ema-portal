@@ -27,6 +27,27 @@ body.model-announcement #announcement_form {
   box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.08);
   padding: 18px 20px 16px;
   color: #050505;
+  color-scheme: light; /* stop browser/OS dark mode from re-darkening native form controls */
+}
+
+/* Blanket reset: every field in this form gets the same light background + dark
+   text, regardless of the admin's light/dark theme. More specific rules further
+   down (Title, Content, Category/Priority pills, etc.) override this on top. */
+body.model-announcement .field-title input[type="text"],
+body.model-announcement .field-slug input[type="text"],
+body.model-announcement .field-content textarea,
+body.model-announcement .field-excerpt input,
+body.model-announcement .field-excerpt textarea,
+body.model-announcement .field-category select,
+body.model-announcement .field-priority select,
+body.model-announcement .field-author select,
+body.model-announcement .field-video_url input,
+body.model-announcement .field-published_at input,
+body.model-announcement .field-expires_at input {
+  background-color: #ffffff;
+  color: #1c1e21;
+  border: 1px solid #ccd0d5;
+  border-radius: 6px;
 }
 
 body.model-announcement #announcement_form > div {
@@ -101,10 +122,12 @@ body.model-announcement fieldset.collapse summary {
   border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
-  color: #050505;
+  background: transparent !important;
+  border: none !important;
+  color: #050505 !important;
 }
 body.model-announcement fieldset.collapse summary::before {
-  content: "📎 ";
+  content: "📎 Add photo, video, or attachment";
 }
 body.model-announcement fieldset.collapse summary:hover {
   background: #f2f3f5;

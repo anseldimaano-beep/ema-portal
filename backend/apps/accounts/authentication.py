@@ -39,7 +39,17 @@ class JWTAuthentication(authentication.BaseAuthentication):
         return self.authenticate_credentials(token)
 
     def authenticate_credentials(self, token):
-        """Validate JWT token and return user."""
+        """Validate JWT token and return user.
+
+        Important: any problem with the token (expired, malformed, revoked,
+        wrong type, unknown user) falls back to `None` (anonymous) rather
+        than raising. Raising here causes DRF to reject the request outright
+        *before* view-level permission checks run — which broke public
+        (AllowAny) endpoints like the announcements list for any visitor
+        whose browser happened to be holding a stale/expired token. Views
+        that actually require auth are still protected: an anonymous user
+        is correctly denied by their own IsAuthenticated permission class.
+        """
         try:
             payload = jwt.decode(
                 token,
@@ -47,26 +57,26 @@ class JWTAuthentication(authentication.BaseAuthentication):
                 algorithms=[settings.JWT_ALGORITHM]
             )
         except jwt.ExpiredSignatureError:
-            raise exceptions.AuthenticationFailed('Token has expired. Please login again.')
+            return None
         except jwt.InvalidTokenError:
-            raise exceptions.AuthenticationFailed('Invalid token. Please login again.')
+            return None
 
         # Reject refresh tokens (or anything else) presented as an access token.
         # Without this check, a stolen/leaked refresh token could be used
         # directly against every API endpoint instead of only /auth/refresh/.
         if payload.get('type') != 'access':
-            raise exceptions.AuthenticationFailed('Invalid token type. An access token is required.')
+            return None
 
         jti = payload.get('jti')
         if jti:
             from .models import BlacklistedToken
             if BlacklistedToken.objects.filter(jti=jti).exists():
-                raise exceptions.AuthenticationFailed('Token has been revoked. Please login again.')
+                return None
 
         try:
             user = User.objects.get(id=payload['user_id'], is_active=True)
         except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed('User not found or inactive.')
+            return None
 
         # Stash the decoded payload so views (e.g. logout) can blacklist this
         # exact token without re-decoding it.

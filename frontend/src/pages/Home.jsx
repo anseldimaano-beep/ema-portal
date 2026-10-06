@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '../services/api';
 import { formatDate } from '../utils/helpers';
-import eemgSeal from '../assets/eemg_seal.png';
+import eemgSeal from '../assets/eemg_seal.webp';
 import VideoEmbed from '../components/VideoEmbed';
 
 // Hero image + pagination, styled after the Senate site's

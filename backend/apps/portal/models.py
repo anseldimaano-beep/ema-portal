@@ -88,6 +88,25 @@ class Announcement(models.Model):
         return self.title
 
 
+class AnnouncementPhoto(models.Model):
+    """Extra photos for an announcement (the featured image stays on Announcement)."""
+
+    announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='announcements/photos/%Y/%m/')
+    caption = models.CharField(max_length=200, blank=True)
+    order = models.PositiveSmallIntegerField(default=0, help_text='Lower numbers show first.')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'announcement_photos'
+        ordering = ['order', 'id']
+        verbose_name = 'Photo'
+        verbose_name_plural = 'Photos'
+
+    def __str__(self):
+        return self.caption or f'Photo {self.pk} for {self.announcement_id}'
+
+
 class AcademicCalendar(models.Model):
     """Academic calendar events and important dates."""
 

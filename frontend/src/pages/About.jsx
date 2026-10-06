@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { COLLEGE_NAME } from '../utils/constants';
+import PhotoGallery from '../components/PhotoGallery';
 
 // Founded year, motto, and location are taken from the college seal itself.
 // Mission/Vision/Core Values/Hymn belong to the college (EECP) specifically,
@@ -240,6 +241,24 @@ const HymnSection = () => {
   );
 };
 
+// ---------------------------------------------------------------------------
+// PHOTOS: add as many pictures as you like for each tab.
+// 1. Upload the image files to  frontend/public/images/about/
+// 2. Add one line per photo below. Example:
+//      { src: '/images/about/campus-1.jpg', caption: 'The EMITS campus' },
+// Photos show as a grid; clicking one opens it full size (arrow keys to browse).
+// A tab with no photos shows no gallery.
+// ---------------------------------------------------------------------------
+const PHOTOS = {
+  college: [
+    // { src: '/images/about/college-1.jpg', caption: 'Add a caption here' },
+    // { src: '/images/about/college-2.jpg', caption: '' },
+  ],
+  eemg: [
+    // { src: '/images/about/eemg-1.jpg', caption: 'Add a caption here' },
+  ]
+};
+
 const HistoryTabs = () => {
   const [active, setActive] = useState(HISTORY_TABS[0].key);
   const { hash } = useLocation();
@@ -280,6 +299,8 @@ const HistoryTabs = () => {
           tab.body
         )}
       </div>
+
+      <PhotoGallery photos={PHOTOS[active] || []} />
 
       {/* Mission/Vision/Core Values/Hymn are EECP (college) specific */}
       {active === 'college' && (

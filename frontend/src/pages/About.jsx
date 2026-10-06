@@ -5,11 +5,99 @@ import { COLLEGE_NAME } from '../utils/constants';
 // Founded year, motto, and location are taken from the college seal itself.
 // Mission/Vision/Core Values/Hymn belong to the college (EECP) specifically,
 // not the student government body, so they only render under that tab.
+const CollegeHistory = () => (
+  <div className="space-y-8">
+    <div className="space-y-4 text-gray-700 leading-relaxed">
+      <p>
+        EMA EMITS College Philippines began as Eastern Mindoro Academy (EMA), founded in 1945 in
+        Pinamalayan, Oriental Mindoro by Attorney Federico Semilla. He was a native of Marinduque
+        whose family had settled in Quinabigan, one of the town's barangays. In 1985 the school was
+        incorporated as the Eastern Mindoro Institute of Technology and Sciences (EMITS).
+      </p>
+      <p>
+        Many of today's students are the children and grandchildren of former students. For those
+        families, EMITS has become a legacy. The Semilla family has kept upgrading the school, and
+        its curriculum is revised regularly to meet DepEd requirements for private schools.
+      </p>
+    </div>
+
+    <ol className="relative border-l-4 border-accent-500 ml-2 space-y-6">
+      {COLLEGE_TIMELINE.map((m) => (
+        <li key={m.year} className="pl-6 relative">
+          <span className="absolute -left-[13px] top-1.5 w-5 h-5 rounded-full bg-primary-800 border-4 border-white ring-2 ring-accent-500" />
+          <div className="font-display text-2xl font-bold text-primary-800 leading-none">{m.year}</div>
+          <div className="font-semibold mt-1">{m.title}</div>
+          <p className="text-gray-600 text-sm mt-1">{m.text}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div>
+      <h3 className="font-bold mb-2">One campus, kindergarten to college</h3>
+      <p className="text-gray-700 mb-3">
+        The school offers prep and kindergarten, elementary and secondary education, and college and
+        technical courses recognized by CHED and TESDA.
+      </p>
+      <ul className="flex flex-wrap gap-2">
+        {LEVELS.map((l) => (
+          <li key={l} className="px-3 py-1 rounded-full text-sm bg-primary-50 text-primary-800 border border-primary-200">
+            {l}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div className="grid md:grid-cols-3 gap-4">
+      {HIGHLIGHTS.map((h) => (
+        <div key={h.title} className="border-t-4 border-primary-800 bg-gray-50 rounded-b-lg p-4">
+          <h3 className="font-bold mb-1">{h.title}</h3>
+          <p className="text-sm text-gray-600">{h.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const COLLEGE_TIMELINE = [
+  {
+    year: '1945',
+    title: 'Eastern Mindoro Academy opens',
+    text: 'Attorney Federico Semilla founds the school in Pinamalayan, Oriental Mindoro.'
+  },
+  {
+    year: '1985',
+    title: 'Incorporated as EMITS',
+    text: 'The Academy becomes the Eastern Mindoro Institute of Technology and Sciences.'
+  },
+  {
+    year: '2012',
+    title: 'EMA EMITS Model Government founded',
+    text: 'Students gain a self-government body with senators, committees and representative groups.'
+  }
+];
+
+const LEVELS = ['Prep & Kindergarten', 'Elementary', 'Secondary', 'College (CHED)', 'Technical (TESDA)'];
+
+const HIGHLIGHTS = [
+  {
+    title: 'Campus press',
+    text: 'The Rainbow Times (English) and Pulso ng EMITS (Filipino) have won over 200 press conference recognitions between them.'
+  },
+  {
+    title: 'Theater',
+    text: 'Tanghalan Ngani, the student theater group, stages full productions with costumes, props and lighting.'
+  },
+  {
+    title: 'College of Education',
+    text: 'Education students observe classes in the school\'s own high school department, and most graduates are hired soon after graduation.'
+  }
+];
+
 const HISTORY_TABS = [
   {
     key: 'college',
     label: 'EMA EMITS College Philippines',
-    body: "Add the college's founding story and key milestones here — replace this placeholder with the official write-up."
+    body: <CollegeHistory />
   },
   {
     key: 'eemg',
@@ -65,7 +153,11 @@ const HistoryTabs = () => {
         <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
           <span className="text-sm text-gray-400">Photo coming soon</span>
         </div>
-        <p className="text-gray-500 text-sm italic">{tab.body}</p>
+        {typeof tab.body === 'string' ? (
+          <p className="text-gray-500 text-sm italic">{tab.body}</p>
+        ) : (
+          tab.body
+        )}
       </div>
 
       {/* Mission/Vision/Core Values/Hymn are EECP (college) specific */}

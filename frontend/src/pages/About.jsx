@@ -195,20 +195,24 @@ const Hymn = () => (
   </section>
 );
 
-// Fill these in with the official text. A section stays hidden while its text is empty.
+// Paste the official text between the quotes. While a value is empty, the page shows a
+// "will be posted soon" note. Use \n for a line break (handy for the core values list).
 const MISSION = '';
 const VISION = '';
 const CORE_VALUES = '';
 
-const InfoSection = ({ title, text }) =>
-  text ? (
-    <section className="mb-8">
-      <h2 className="text-xl font-bold mb-2">{title}</h2>
-      <div className="card-accent p-6">
+const InfoSection = ({ title, text }) => (
+  <section className="mb-8">
+    <h2 className="text-xl font-bold mb-2">{title}</h2>
+    <div className="card-accent p-6">
+      {text ? (
         <p className="text-gray-700 leading-relaxed whitespace-pre-line">{text}</p>
-      </div>
-    </section>
-  ) : null;
+      ) : (
+        <p className="text-gray-500 text-sm italic">The official {title.toLowerCase()} will be posted here soon.</p>
+      )}
+    </div>
+  </section>
+);
 
 // Paste the Alma Mater Song text between the backticks below.
 // Leave a blank line between stanzas. Lines inside a stanza keep their line breaks.

@@ -1,186 +1,115 @@
-import re
-from django.contrib import admin
-from django.utils import timezone
-from django.utils.html import format_html
+from rest_framework import serializers
 from .models import Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
-from .email_utils import send_via_resend
 
 
-def _video_embed_src(url):
-    """Mirrors the frontend's getVideoEmbedUrl() so the admin preview matches
-    what visitors will actually see on the site."""
-    if not url:
-        return None
+class AnnouncementPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnnouncementPhoto
+        fields = ['id', 'image', 'caption', 'order']
 
-    yt_match = re.search(
-        r'(?:youtu\.be/|youtube\.com/(?:watch\?v=|embed/|shorts/))([a-zA-Z0-9_-]{11})',
-        url,
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+    photos = AnnouncementPhotoSerializer(many=True, read_only=True)
+    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+    priority_display = serializers.CharField(source='get_priority_display', read_only=True)
+
+    class Meta:
+        model = Announcement
+        fields = [
+            'id', 'title', 'slug', 'content', 'excerpt', 'category',
+            'category_display', 'priority', 'priority_display',
+            'featured_image', 'photos', 'attachment', 'video_url', 'video_file', 'author_name',
+            'is_published', 'is_pinned', 'published_at', 'expires_at',
+            'view_count', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['slug', 'view_count', 'created_at', 'updated_at']
+
+
+class AnnouncementListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for list views."""
+    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
+    photos = AnnouncementPhotoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Announcement
+        fields = ['id', 'title', 'slug', 'content', 'excerpt', 'category', 'priority', 
+                  'featured_image', 'photos', 'video_url', 'video_file', 'is_pinned', 'published_at', 'author_name']
+
+
+class AcademicCalendarSerializer(serializers.ModelSerializer):
+    event_type_display = serializers.CharField(source='get_event_type_display', read_only=True)
+
+    class Meta:
+        model = AcademicCalendar
+        fields = [
+            'id', 'title', 'description', 'event_type', 'event_type_display',
+            'start_date', 'end_date', 'start_time', 'end_time',
+            'location', 'is_all_day', 'is_academic', 'is_recurring'
+        ]
+
+
+class FAQSerializer(serializers.ModelSerializer):
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+
+    class Meta:
+        model = FAQ
+        fields = ['id', 'question', 'answer', 'category', 'category_display', 'order', 'view_count']
+
+
+class PageContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PageContent
+        fields = ['id', 'page', 'title', 'content', 'last_updated']
+
+
+class SenatorSerializer(serializers.ModelSerializer):
+    position_display = serializers.CharField(source='get_position_display', read_only=True)
+
+    class Meta:
+        model = Senator
+        fields = [
+            'id', 'name', 'photo', 'position', 'position_display',
+            'department', 'bio', 'term', 'order', 'is_active',
+        ]
+
+
+class SenatorBriefSerializer(serializers.ModelSerializer):
+    """Lightweight senator representation for nesting inside committees."""
+    position_display = serializers.CharField(source='get_position_display', read_only=True)
+
+    class Meta:
+        model = Senator
+        fields = ['id', 'name', 'photo', 'position', 'position_display']
+
+
+class CommitteeSerializer(serializers.ModelSerializer):
+    chairperson = SenatorBriefSerializer(read_only=True)
+    chairperson_id = serializers.PrimaryKeyRelatedField(
+        source='chairperson', queryset=Senator.objects.all(), write_only=True, required=False, allow_null=True
     )
-    if yt_match:
-        return f'https://www.youtube.com/embed/{yt_match.group(1)}'
-
-    if 'facebook.com' in url or 'fb.watch' in url:
-        from urllib.parse import quote
-        return f'https://www.facebook.com/plugins/video.php?href={quote(url, safe="")}&show_text=0'
-
-    return None
-
-
-class AnnouncementPhotoInline(admin.TabularInline):
-    """Add as many extra photos as you like under an announcement."""
-    model = AnnouncementPhoto
-    extra = 5
-    fields = ['image', 'preview', 'caption', 'order']
-    readonly_fields = ['preview']
-    verbose_name = 'Photo'
-    verbose_name_plural = 'More photos (add as many as you like, click "Save and continue editing" for more rows)'
-
-    def preview(self, obj):
-        if obj and obj.image:
-            return format_html(
-                '<img src="{}" style="height:60px;border-radius:4px;" alt="">', obj.image.url
-            )
-        return '-'
-    preview.short_description = 'Preview'
-
-
-@admin.register(Announcement)
-class AnnouncementAdmin(admin.ModelAdmin):
-    inlines = [AnnouncementPhotoInline]
-    list_display = ['title', 'category', 'priority', 'is_pinned', 'is_published', 'published_at', 'author']
-    list_filter = ['category', 'priority', 'is_published', 'is_pinned']
-    search_fields = ['title', 'content']
-    prepopulated_fields = {'slug': ('title',)}
-    date_hierarchy = 'published_at'
-    ordering = ['-is_pinned', '-published_at']
-    readonly_fields = ['video_preview']
-
-    class Media:
-        css = {'all': ('portal/admin/announcement_composer.css',)}
-        js = ('portal/admin/announcement_composer.js',)
-
-    fieldsets = (
-        ('Content', {
-            'fields': ('title', 'slug', 'content', 'excerpt', 'category', 'priority')
-        }),
-        ('Media', {
-            'fields': ('featured_image', 'attachment', 'video_url', 'video_file', 'video_preview'),
-            'classes': ('collapse',)
-        }),
-        ('Publishing', {
-            'fields': ('author', 'is_published', 'is_pinned', 'published_at', 'expires_at')
-        }),
+    members = SenatorBriefSerializer(many=True, read_only=True)
+    member_ids = serializers.PrimaryKeyRelatedField(
+        source='members', queryset=Senator.objects.all(), write_only=True, many=True, required=False
     )
 
-    def video_preview(self, obj):
-        if obj.video_file:
-            return format_html(
-                '<div style="max-width:400px;">'
-                '<video src="{}" width="400" height="220" controls preload="metadata" '
-                'style="background:#000;border-radius:4px;"></video>'
-                '<p style="margin-top:6px;font-size:12px;color:#555;">'
-                'Your own uploaded video. This takes priority over the Video URL field below '
-                'if both are set.'
-                '</p>'
-                '</div>',
-                obj.video_file.url,
-            )
-
-        if not obj.video_url:
-            return 'Upload a video file or enter a video URL above, then save to preview it here.'
-
-        embed_src = _video_embed_src(obj.video_url)
-        if not embed_src:
-            return format_html(
-                '<span style="color:#b91c1c;">Unrecognized link — must be a YouTube or Facebook video URL.</span>'
-            )
-
-        return format_html(
-            '<div style="max-width:400px;">'
-            '<iframe src="{}" width="400" height="220" frameborder="0" '
-            'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" '
-            'allowfullscreen></iframe>'
-            '<p style="margin-top:6px;font-size:12px;color:#555;">'
-            'If this shows "Unavailable" (common for Facebook Reels blocked by rights checks), '
-            'clear Video URL and rely on Featured image instead, or use a regular Facebook video post link.'
-            '</p>'
-            '<p style="margin-top:2px;"><a href="{}" target="_blank" rel="noopener noreferrer">Open original link &#8599;</a></p>'
-            '</div>',
-            embed_src, obj.video_url,
-        )
-    video_preview.short_description = 'Video preview'
+    class Meta:
+        model = Committee
+        fields = [
+            'id', 'name', 'description', 'chairperson', 'chairperson_id',
+            'members', 'member_ids', 'order', 'is_active',
+        ]
 
 
-@admin.register(AcademicCalendar)
-class AcademicCalendarAdmin(admin.ModelAdmin):
-    list_display = ['title', 'event_type', 'start_date', 'end_date', 'is_academic']
-    list_filter = ['event_type', 'is_academic', 'is_recurring']
-    search_fields = ['title', 'description']
-    date_hierarchy = 'start_date'
-    ordering = ['start_date']
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ['id', 'name', 'email', 'subject', 'message', 'status', 'created_at']
+        read_only_fields = ['status', 'created_at']
 
 
-@admin.register(FAQ)
-class FAQAdmin(admin.ModelAdmin):
-    list_display = ['question', 'category', 'is_published', 'order', 'view_count']
-    list_filter = ['category', 'is_published']
-    search_fields = ['question', 'answer']
-    ordering = ['category', 'order']
-
-
-@admin.register(PageContent)
-class PageContentAdmin(admin.ModelAdmin):
-    list_display = ['page', 'title', 'last_updated', 'updated_by']
-    list_filter = ['page']
-    search_fields = ['title', 'content']
-
-
-@admin.register(Senator)
-class SenatorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'position', 'department', 'term', 'order', 'is_active']
-    list_filter = ['position', 'is_active', 'term']
-    search_fields = ['name', 'department']
-    ordering = ['order', 'name']
-
-
-@admin.register(Committee)
-class CommitteeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'chairperson', 'order', 'is_active']
-    list_filter = ['is_active']
-    search_fields = ['name', 'description']
-    filter_horizontal = ['members']
-    ordering = ['order', 'name']
-
-
-@admin.register(ContactMessage)
-class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'subject', 'status', 'created_at']
-    list_filter = ['status']
-    search_fields = ['name', 'email', 'subject']
-    readonly_fields = ['created_at', 'responded_by', 'responded_at']
-    ordering = ['-created_at']
-
-    def save_model(self, request, obj, form, change):
-        # Only fire an email the moment a response is newly written or edited.
-        response_changed = 'response' in form.changed_data and obj.response.strip()
-
-        if response_changed:
-            obj.responded_by = request.user
-            obj.responded_at = timezone.now()
-            if obj.status == obj.Status.NEW:
-                obj.status = obj.Status.RESOLVED
-
-        super().save_model(request, obj, form, change)
-
-        if response_changed:
-            send_via_resend(
-                to_email=obj.email,
-                subject=f'Re: {obj.subject}',
-                text_body=(
-                    f'Hi {obj.name},\n\n'
-                    f'{obj.response}\n\n'
-                    f'---\n'
-                    f'This is a reply to your message sent to EMA EMITS Model Government:\n'
-                    f'"{obj.message}"'
-                ),
-            )
+class ContactMessageAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = '__all__'
+        read_only_fields = ['created_at']

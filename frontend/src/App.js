@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -13,8 +13,32 @@ import FAQPage from './pages/FAQPage';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 
+const SITE_TITLE = 'EEMG College | EMA EMITS Model Government';
+const PAGE_TITLES = {
+  '/': SITE_TITLE,
+  '/about': 'About | EEMG College',
+  '/project': 'Projects | EEMG College',
+  '/government': 'Government | EEMG College',
+  '/calendar': 'Calendar | EEMG College',
+  '/announcements': 'Announcements | EEMG College',
+  '/faq': 'FAQ | EEMG College',
+  '/contact': 'Contact | EEMG College'
+};
+
+// Sets the browser tab title per route and scrolls to the top on page change
+// (but not when the URL has a #hash, which the About tabs use).
+const TitleManager = () => {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    document.title = PAGE_TITLES[pathname] || 'Page not found | EEMG College';
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+};
+
 const Layout = () => (
   <div className="flex flex-col min-h-screen">
+    <TitleManager />
     <Navbar />
     <main className="flex-1">
       <Routes>

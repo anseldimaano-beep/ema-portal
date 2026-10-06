@@ -29,6 +29,14 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
+if not DEBUG and SECRET_KEY == 'django-insecure-change-me-in-production':
+    import warnings
+    warnings.warn(
+        'SECRET_KEY is not set: using the insecure default. '
+        'Set a long random SECRET_KEY in the Render environment variables.',
+        RuntimeWarning,
+    )
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

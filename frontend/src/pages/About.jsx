@@ -106,6 +106,89 @@ const HISTORY_TABS = [
   }
 ];
 
+const ALMA_MATER = [
+  {
+    type: 'verse',
+    lines: [
+      'Fairest of thy legacy',
+      'Is the knowledge that you gave me',
+      'The beacon light of wisdom',
+      'Like a brightly shining star'
+    ]
+  },
+  {
+    type: 'verse',
+    lines: [
+      'Laurels of your glory',
+      'And in this heart of mine',
+      'Forever more I’m singing',
+      'a song of love divine'
+    ]
+  },
+  {
+    type: 'chorus',
+    lines: [
+      '’Tis the song of the mind set free (set free)',
+      'And its melody is ringing',
+      '’Tis the song of the mind set free (set free)',
+      'Joy unspeakable to me is bringing',
+      '’Tis the song of the mind set free (set free)',
+      'And my heart is ever singing',
+      'Alma Mater... Alma Mater',
+      'Our honor we offer thee.'
+    ]
+  },
+  {
+    type: 'verse',
+    lines: [
+      'When you came to lead me',
+      'You set the joy bells ringing',
+      'And now I’m ever singing',
+      'In every land and sea'
+    ]
+  },
+  {
+    type: 'verse',
+    lines: [
+      'Once I lived in ignorance',
+      'The light I could not see',
+      'But now I sing my freedom',
+      'For you have set me free'
+    ]
+  },
+  { type: 'repeat', lines: ['Repeat Chorus'] }
+];
+
+const Hymn = () => (
+  <section className="mb-8">
+    <h2 className="text-xl font-bold mb-2">EECP Hymn</h2>
+    <div className="card-accent p-6 text-center">
+      <h3 className="font-display text-2xl font-bold text-primary-800 mb-6">Alma Mater Song</h3>
+      <div className="space-y-6">
+        {ALMA_MATER.map((st, i) => (
+          <div key={i}>
+            {st.type === 'chorus' && (
+              <div className="text-primary-700 font-bold text-sm mb-1">Chorus</div>
+            )}
+            {st.type === 'repeat' ? (
+              <p className="text-primary-700 font-semibold text-sm">{st.lines[0]}</p>
+            ) : (
+              <p className="text-gray-800 leading-relaxed">
+                {st.lines.map((l, j) => (
+                  <React.Fragment key={j}>
+                    {l}
+                    {j < st.lines.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 const PlaceholderSection = ({ title, text }) => (
   <section className="mb-8">
     <h2 className="text-xl font-bold mb-2">{title}</h2>
@@ -122,7 +205,7 @@ const HYMN_LYRICS = ``;
 const HymnSection = () => {
   const stanzas = HYMN_LYRICS.trim() ? HYMN_LYRICS.trim().split(/\n\s*\n/) : [];
   if (stanzas.length === 0) {
-    return <PlaceholderSection title="EECP Hymn" text="Add the EECP Hymn lyrics here." />;
+    return <Hymn />;
   }
   return (
     <section className="mb-8">

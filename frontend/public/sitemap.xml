@@ -1,43 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/about</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/project</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/government</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/calendar</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/announcements</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/faq</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://ema-portal-frontend.onrender.com/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-</urlset>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#5c1414" />
+    <meta name="description" content="EEMG College Portal — the official student government portal for EMA EMITS Model Government (EEMG), featuring announcements, events, and student registration" />
+    <link rel="canonical" href="https://eemgcollege.onrender.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EMA EMITS Model Government" />
+    <meta property="og:title" content="EEMG College | EMA EMITS Model Government" />
+    <meta property="og:description" content="Official site of the EMA EMITS Model Government: announcements, events, projects and student services." />
+    <meta property="og:url" content="https://eemgcollege.onrender.com/" />
+    <meta property="og:image" content="https://eemgcollege.onrender.com/logo512.png" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>EEMG College | EMA EMITS Model Government Portal</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

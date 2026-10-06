@@ -102,7 +102,13 @@ const HISTORY_TABS = [
   {
     key: 'eemg',
     label: 'EMA EMITS Model Government',
-    body: "Add the Model Government's founding story and key milestones here — replace this placeholder with the official write-up."
+    body: (
+      <p className="text-gray-700 leading-relaxed">
+        The EMA EMITS Model Government (EEMG) is the student-body organization of EMA EMITS College
+        Philippines. It was founded in 2012 in Pinamalayan, Oriental Mindoro, under the motto
+        &ldquo;Love, Faith, Justice.&rdquo;
+      </p>
+    )
   }
 ];
 
@@ -189,14 +195,20 @@ const Hymn = () => (
   </section>
 );
 
-const PlaceholderSection = ({ title, text }) => (
-  <section className="mb-8">
-    <h2 className="text-xl font-bold mb-2">{title}</h2>
-    <div className="card-accent p-6">
-      <p className="text-gray-500 text-sm italic">{text}</p>
-    </div>
-  </section>
-);
+// Fill these in with the official text. A section stays hidden while its text is empty.
+const MISSION = '';
+const VISION = '';
+const CORE_VALUES = '';
+
+const InfoSection = ({ title, text }) =>
+  text ? (
+    <section className="mb-8">
+      <h2 className="text-xl font-bold mb-2">{title}</h2>
+      <div className="card-accent p-6">
+        <p className="text-gray-700 leading-relaxed whitespace-pre-line">{text}</p>
+      </div>
+    </section>
+  ) : null;
 
 // Paste the Alma Mater Song text between the backticks below.
 // Leave a blank line between stanzas. Lines inside a stanza keep their line breaks.
@@ -258,10 +270,6 @@ const HistoryTabs = () => {
       </div>
 
       <div className="card-accent p-6 mb-8">
-        {/* Image placeholder - photos to be added later */}
-        <div className="w-full aspect-video rounded-lg bg-gray-100 flex items-center justify-center mb-4 border border-dashed border-gray-300">
-          <span className="text-sm text-gray-400">Photo coming soon</span>
-        </div>
         {typeof tab.body === 'string' ? (
           <p className="text-gray-500 text-sm italic">{tab.body}</p>
         ) : (
@@ -272,9 +280,9 @@ const HistoryTabs = () => {
       {/* Mission/Vision/Core Values/Hymn are EECP (college) specific */}
       {active === 'college' && (
         <>
-          <PlaceholderSection title="Mission" text="Add the official mission statement here." />
-          <PlaceholderSection title="Vision" text="Add the official vision statement here." />
-          <PlaceholderSection title="Core Values" text="Add the official core values here." />
+          <InfoSection title="Mission" text={MISSION} />
+          <InfoSection title="Vision" text={VISION} />
+          <InfoSection title="Core Values" text={CORE_VALUES} />
           <HymnSection />
         </>
       )}

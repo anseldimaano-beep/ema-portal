@@ -2,7 +2,7 @@ import re
 from django.contrib import admin
 from django.utils import timezone
 from django.utils.html import format_html
-from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+from .models import Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
 from .email_utils import send_via_resend
 
 
@@ -26,8 +26,27 @@ def _video_embed_src(url):
     return None
 
 
+class AnnouncementPhotoInline(admin.TabularInline):
+    """Add as many extra photos as you like under an announcement."""
+    model = AnnouncementPhoto
+    extra = 5
+    fields = ['image', 'preview', 'caption', 'order']
+    readonly_fields = ['preview']
+    verbose_name = 'Photo'
+    verbose_name_plural = 'More photos (add as many as you like, click "Save and continue editing" for more rows)'
+
+    def preview(self, obj):
+        if obj and obj.image:
+            return format_html(
+                '<img src="{}" style="height:60px;border-radius:4px;" alt="">', obj.image.url
+            )
+        return '-'
+    preview.short_description = 'Preview'
+
+
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):
+    inlines = [AnnouncementPhotoInline]
     list_display = ['title', 'category', 'priority', 'is_pinned', 'is_published', 'published_at', 'author']
     list_filter = ['category', 'priority', 'is_published', 'is_pinned']
     search_fields = ['title', 'content']

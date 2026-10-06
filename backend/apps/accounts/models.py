@@ -200,6 +200,8 @@ class StudentProfile(models.Model):
 
     class Meta:
         db_table = 'student_profiles'
+        verbose_name = 'President'
+        verbose_name_plural = 'President'
 
     def __str__(self):
         return f"Profile: {self.user.get_full_name()}"
@@ -223,6 +225,8 @@ class FacultyProfile(models.Model):
 
     class Meta:
         db_table = 'faculty_profiles'
+        verbose_name = 'EEMG Officer'
+        verbose_name_plural = 'EEMG Officers'
 
     def __str__(self):
         return f"Faculty: {self.user.get_full_name()}"

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { ChevronDown, Menu, Search, X } from 'lucide-react';
-import logo from '../assets/logo.png';
-import eemgSeal from '../assets/eemg_seal.png';
+import logo from '../assets/logo.webp';
+import eemgSeal from '../assets/eemg_seal.webp';
 import { SESSION_LABEL, SESSION_SUBLABEL } from '../utils/constants';
 
 // Public college-site navbar, styled after the Senate of the Philippines

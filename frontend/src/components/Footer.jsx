@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Mail, MapPin } from 'lucide-react';
-import logo from '../assets/logo.png';
-import eemgSeal from '../assets/eemg_seal.png';
+import logo from '../assets/logo.webp';
+import eemgSeal from '../assets/eemg_seal.webp';
 import { COLLEGE_NAME, COLLEGE_FACEBOOK_URL } from '../utils/constants';
 
 const QUICK_LINKS = [

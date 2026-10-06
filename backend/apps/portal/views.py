@@ -21,7 +21,7 @@ from apps.accounts.permissions import IsAdmin, IsFacultyOrAdmin
 
 class AnnouncementListView(generics.ListAPIView):
     """List all published announcements (public)."""
-    queryset = Announcement.objects.filter(is_published=True)
+    queryset = Announcement.objects.filter(is_published=True).prefetch_related('photos')
     serializer_class = AnnouncementListSerializer
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -33,7 +33,7 @@ class AnnouncementListView(generics.ListAPIView):
 
 class AnnouncementDetailView(generics.RetrieveAPIView):
     """Retrieve a specific announcement (public)."""
-    queryset = Announcement.objects.filter(is_published=True)
+    queryset = Announcement.objects.filter(is_published=True).prefetch_related('photos')
     serializer_class = AnnouncementSerializer
     permission_classes = [AllowAny]
     lookup_field = 'slug'

@@ -115,6 +115,32 @@ const PlaceholderSection = ({ title, text }) => (
   </section>
 );
 
+// Paste the Alma Mater Song text between the backticks below.
+// Leave a blank line between stanzas. Lines inside a stanza keep their line breaks.
+const HYMN_LYRICS = ``;
+
+const HymnSection = () => {
+  const stanzas = HYMN_LYRICS.trim() ? HYMN_LYRICS.trim().split(/\n\s*\n/) : [];
+  if (stanzas.length === 0) {
+    return <PlaceholderSection title="EECP Hymn" text="Add the EECP Hymn lyrics here." />;
+  }
+  return (
+    <section className="mb-8">
+      <h2 className="text-xl font-bold mb-2">EECP Hymn</h2>
+      <div className="card-accent p-6 text-center">
+        <p className="eyebrow justify-center mb-4">Alma Mater Song</p>
+        <div className="space-y-5">
+          {stanzas.map((st, i) => (
+            <p key={i} className="whitespace-pre-line text-gray-700 leading-relaxed">
+              {st}
+            </p>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const HistoryTabs = () => {
   const [active, setActive] = useState(HISTORY_TABS[0].key);
   const { hash } = useLocation();
@@ -166,7 +192,7 @@ const HistoryTabs = () => {
           <PlaceholderSection title="Mission" text="Add the official mission statement here." />
           <PlaceholderSection title="Vision" text="Add the official vision statement here." />
           <PlaceholderSection title="Core Values" text="Add the official core values here." />
-          <PlaceholderSection title="EECP Hymn" text="Add the EECP Hymn lyrics here." />
+          <HymnSection />
         </>
       )}
     </div>

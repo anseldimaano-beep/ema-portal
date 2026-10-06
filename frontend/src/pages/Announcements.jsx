@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import api from '../services/api';
 import { formatDate } from '../utils/helpers';
 import VideoEmbed from '../components/VideoEmbed';
+import PhotoGallery from '../components/PhotoGallery';
 
 const CATEGORY_LABELS = {
   general: 'General',
@@ -45,6 +46,11 @@ const AnnouncementRow = ({ a }) => {
             {expanded ? 'Read less' : 'Read more'}
           </button>
         )}
+        <PhotoGallery
+          compact
+          heading={null}
+          photos={(a.photos || []).map((p) => ({ src: p.image, caption: p.caption }))}
+        />
       </div>
     </div>
   );

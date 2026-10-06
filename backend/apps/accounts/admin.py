@@ -6,13 +6,13 @@ from .models import User, StudentProfile, FacultyProfile, BlacklistedToken, Pass
 class StudentProfileInline(admin.StackedInline):
     model = StudentProfile
     can_delete = False
-    verbose_name_plural = 'Student Profile'
+    verbose_name_plural = 'President'
 
 
 class FacultyProfileInline(admin.StackedInline):
     model = FacultyProfile
     can_delete = False
-    verbose_name_plural = 'Faculty Profile'
+    verbose_name_plural = 'EEMG Officer'
 
 
 @admin.register(User)

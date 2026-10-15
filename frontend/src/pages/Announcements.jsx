@@ -2,7 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import api from '../services/api';
 import { formatDate } from '../utils/helpers';
 import VideoEmbed from '../components/VideoEmbed';
-import PhotoGallery from '../components/PhotoGallery';
+import PostPhotoGrid from '../components/PostPhotoGrid';
+import { Globe } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const CATEGORY_LABELS = {
   general: 'General',
@@ -17,42 +19,58 @@ const CATEGORY_FILTERS = [{ value: 'all', label: 'All' }, ...Object.entries(CATE
   ([value, label]) => ({ value, label })
 )];
 
+// Facebook-style post: page header, text with "See more", video, then a photo collage.
 const AnnouncementRow = ({ a }) => {
   const [expanded, setExpanded] = useState(false);
   const text = a.content || a.excerpt || '';
-  const isLong = text.length > 220;
+  const isLong = text.length > 220 || text.split('\n').length > 4;
+  const hasVideo = !!(a.video_file || a.video_url);
+
+  // With a video, the featured image is just its poster/fallback; otherwise it leads the collage.
+  const photos = [
+    ...(!hasVideo && a.featured_image ? [{ src: a.featured_image, caption: a.title }] : []),
+    ...(a.photos || []).map((p) => ({ src: p.image, caption: p.caption }))
+  ];
 
   return (
-    <div className="card-accent flex flex-col sm:flex-row overflow-hidden">
-      <div className="sm:w-56 h-40 sm:h-auto bg-primary-50 flex items-center justify-center shrink-0 overflow-hidden">
-        <VideoEmbed videoFile={a.video_file} videoUrl={a.video_url} featuredImage={a.featured_image} title={a.title} />
-      </div>
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-center gap-2 text-xs mb-2">
-          <span className="uppercase tracking-wide font-bold text-primary-700">
-            {CATEGORY_LABELS[a.category] || 'General'}
-          </span>
-          {a.published_at && <span className="text-gray-400">&middot; {formatDate(a.published_at)}</span>}
+    <article className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+      <header className="flex items-center gap-3 px-4 pt-4">
+        <img src={logo} alt="" className="h-10 w-10 rounded-full border border-gray-200 object-contain bg-white p-0.5" />
+        <div className="min-w-0">
+          <div className="font-bold text-gray-900 leading-tight">EMA EMITS Model Government</div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            {a.published_at && <span>{formatDate(a.published_at)}</span>}
+            <span>&middot;</span>
+            <Globe className="h-3 w-3" aria-label="Public" />
+            <span className="ml-1 uppercase tracking-wide font-bold text-primary-700">
+              {CATEGORY_LABELS[a.category] || 'General'}
+            </span>
+          </div>
         </div>
-        <h3 className="font-bold text-gray-900 text-lg mb-2">{a.title}</h3>
-        <p className={`text-gray-600 text-sm flex-1 whitespace-pre-line ${expanded ? '' : 'line-clamp-3'}`}>
+      </header>
+
+      <div className="px-4 pt-3 pb-3">
+        <h3 className="font-bold text-gray-900 text-base mb-1">{a.title}</h3>
+        <p className={`text-gray-800 text-[15px] leading-relaxed whitespace-pre-line ${expanded ? '' : 'line-clamp-4'}`}>
           {text}
         </p>
         {isLong && (
           <button
             onClick={() => setExpanded((e) => !e)}
-            className="text-primary-700 text-sm font-semibold mt-2 self-start hover:underline"
+            className="text-gray-500 text-sm font-semibold mt-1 hover:underline"
           >
-            {expanded ? 'Read less' : 'Read more'}
+            {expanded ? 'See less' : 'See more'}
           </button>
         )}
-        <PhotoGallery
-          compact
-          heading={null}
-          photos={(a.photos || []).map((p) => ({ src: p.image, caption: p.caption }))}
-        />
       </div>
-    </div>
+
+      {hasVideo && (
+        <div className="bg-black aspect-video">
+          <VideoEmbed videoFile={a.video_file} videoUrl={a.video_url} featuredImage={a.featured_image} title={a.title} />
+        </div>
+      )}
+      <PostPhotoGrid photos={photos} />
+    </article>
   );
 };
 
@@ -76,7 +94,7 @@ const Announcements = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="max-w-2xl mx-auto px-4 py-16">
       <div className="eyebrow mb-3">Stay Informed</div>
       <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Announcements &amp; News</h1>
       <p className="text-gray-600 max-w-2xl mb-8">

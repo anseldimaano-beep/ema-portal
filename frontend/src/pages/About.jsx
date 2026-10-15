@@ -167,34 +167,54 @@ const ALMA_MATER = [
   { type: 'repeat', lines: ['Repeat Chorus'] }
 ];
 
-const Hymn = () => (
-  <section className="mb-8">
-    <h2 className="text-xl font-bold mb-2">EECP Hymn</h2>
-    <div className="card-accent p-6 text-center">
-      <h3 className="font-display text-2xl font-bold text-primary-800 mb-6">Alma Mater Song</h3>
-      <div className="space-y-6">
-        {ALMA_MATER.map((st, i) => (
-          <div key={i}>
-            {st.type === 'chorus' && (
-              <div className="text-primary-700 font-bold text-sm mb-1">Chorus</div>
-            )}
-            {st.type === 'repeat' ? (
-              <p className="text-primary-700 font-semibold text-sm">{st.lines[0]}</p>
-            ) : (
-              <p className="text-gray-800 leading-relaxed">
-                {st.lines.map((l, j) => (
-                  <React.Fragment key={j}>
-                    {l}
-                    {j < st.lines.length - 1 && <br />}
-                  </React.Fragment>
-                ))}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+// Poster-style card shared by Mission / Vision / Philosophy / Hymn:
+// maroon title banner + light panel with the college seal faded behind the content.
+const PosterCard = ({ title, children }) => (
+  <section className="mb-8 rounded-lg overflow-hidden shadow-md border border-gray-200">
+    <div className="bg-primary-800 border-b-4 border-accent-500 px-6 py-4 text-center">
+      <h2 className="font-display text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-white">
+        {title}
+      </h2>
+    </div>
+    <div className="relative bg-gray-50 px-6 py-10 sm:px-12 sm:py-14">
+      <img
+        src={sealLogo}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 m-auto h-4/5 max-h-96 w-auto opacity-[0.07] pointer-events-none select-none"
+      />
+      <div className="relative">{children}</div>
     </div>
   </section>
+);
+
+const Hymn = () => (
+  <PosterCard title="EECP Hymn">
+    <h3 className="text-center font-display text-lg sm:text-xl font-extrabold uppercase tracking-wide text-primary-800 mb-8">
+      Alma Mater Song
+    </h3>
+    <div className="space-y-6 text-center">
+      {ALMA_MATER.map((st, i) => (
+        <div key={i}>
+          {st.type === 'chorus' && (
+            <div className="text-primary-700 font-extrabold uppercase tracking-widest text-sm mb-1">Chorus</div>
+          )}
+          {st.type === 'repeat' ? (
+            <p className="text-primary-700 font-bold italic">{st.lines[0]}</p>
+          ) : (
+            <p className="text-primary-800 font-bold text-lg sm:text-xl leading-relaxed">
+              {st.lines.map((l, j) => (
+                <React.Fragment key={j}>
+                  {l}
+                  {j < st.lines.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  </PosterCard>
 );
 
 // Paste the official text between the quotes. While a value is empty, the page shows a
@@ -204,32 +224,17 @@ const VISION = 'EMA EMITS COLLEGE PHILIPPINES is a strong institution, taking th
 const CORE_VALUES = 'EMA EMITS COLLEGE PHILIPPINES is guided by the core values of faith, love and justice. It envisions graduates who believe in God deeply rooted in faith, share their fellowmen and country with unconditional love, and actively participating in building a society where justice prevails through the advancement of human knowledge and upliftment of morality to prepare them for a positive social transformation as desirable citizens in a dynamic social milieu.';
 
 const InfoSection = ({ title, text }) => (
-  <section className="mb-8 rounded-lg overflow-hidden shadow-md border border-gray-200">
-    {/* Maroon title banner, like the campus posters */}
-    <div className="bg-primary-800 border-b-4 border-accent-500 px-6 py-4 text-center">
-      <h2 className="font-display text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-white">
-        {title}
-      </h2>
-    </div>
-    {/* Light panel with the college seal as a faded watermark */}
-    <div className="relative bg-gray-50 px-6 py-10 sm:px-12 sm:py-14">
-      <img
-        src={sealLogo}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 m-auto h-4/5 max-h-96 w-auto opacity-[0.07] pointer-events-none select-none"
-      />
-      {text ? (
-        <p className="relative text-center text-primary-800 font-bold text-lg sm:text-xl leading-relaxed whitespace-pre-line">
-          {text}
-        </p>
-      ) : (
-        <p className="relative text-center text-gray-500 text-sm italic">
-          The official {title.toLowerCase()} will be posted here soon.
-        </p>
-      )}
-    </div>
-  </section>
+  <PosterCard title={title}>
+    {text ? (
+      <p className="text-center text-primary-800 font-bold text-lg sm:text-xl leading-relaxed whitespace-pre-line">
+        {text}
+      </p>
+    ) : (
+      <p className="text-center text-gray-500 text-sm italic">
+        The official {title.toLowerCase()} will be posted here soon.
+      </p>
+    )}
+  </PosterCard>
 );
 
 // Paste the Alma Mater Song text between the backticks below.
@@ -242,19 +247,18 @@ const HymnSection = () => {
     return <Hymn />;
   }
   return (
-    <section className="mb-8">
-      <h2 className="text-xl font-bold mb-2">EECP Hymn</h2>
-      <div className="card-accent p-6 text-center">
-        <p className="eyebrow justify-center mb-4">Alma Mater Song</p>
-        <div className="space-y-5">
-          {stanzas.map((st, i) => (
-            <p key={i} className="whitespace-pre-line text-gray-700 leading-relaxed">
-              {st}
-            </p>
-          ))}
-        </div>
+    <PosterCard title="EECP Hymn">
+      <h3 className="text-center font-display text-lg sm:text-xl font-extrabold uppercase tracking-wide text-primary-800 mb-8">
+        Alma Mater Song
+      </h3>
+      <div className="space-y-6 text-center">
+        {stanzas.map((st, i) => (
+          <p key={i} className="whitespace-pre-line text-primary-800 font-bold text-lg sm:text-xl leading-relaxed">
+            {st}
+          </p>
+        ))}
       </div>
-    </section>
+    </PosterCard>
   );
 };
 

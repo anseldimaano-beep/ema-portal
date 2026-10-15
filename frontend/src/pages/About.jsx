@@ -198,9 +198,9 @@ const Hymn = () => (
 
 // Paste the official text between the quotes. While a value is empty, the page shows a
 // "will be posted soon" note. Use \n for a line break (handy for the core values list).
-const MISSION = '';
-const VISION = '';
-const CORE_VALUES = '';
+const MISSION = 'EMA EMITS COLLEGE PHILIPPINES is an educational institution that provides quality and relevant educational training for pre-elementary, elementary, high school, college, vocational and technical to all persons, regardless of social status, religious affiliation, and political creed, from any place who shall qualify to enroll in this institution.\n\nIt is dedicated to educate students to become productive and useful citizens, as well as to develop its faculty to become competent and honorable educators. It will continuously pride itself by the direct impact towards the local, national, and international economies of its educational activities that greatly contribute to the quality of human resources.\n\nEMA EMITS COLLEGE PHILIPPINES is guided by its core values which are LOVE, FAITH, and JUSTICE.';
+const VISION = 'EMA EMITS COLLEGE PHILIPPINES is a strong institution, taking the center stage in student development, faculty competency, and service to humanity. It is the vision of this Institution that its graduates will be highly competitive in the job market both locally and internationally.';
+const CORE_VALUES = 'EMA EMITS COLLEGE PHILIPPINES is guided by the core values of faith, love and justice. It envisions graduates who believe in God deeply rooted in faith, share their fellowmen and country with unconditional love, and actively participating in building a society where justice prevails through the advancement of human knowledge and upliftment of morality to prepare them for a positive social transformation as desirable citizens in a dynamic social milieu.';
 
 const InfoSection = ({ title, text }) => (
   <section className="mb-8">

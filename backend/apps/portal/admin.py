@@ -1,115 +1,85 @@
-from rest_framework import serializers
-from .models import Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+from django.contrib import admin
+from django.utils import timezone
+
+from .models import (
+    Announcement, AnnouncementPhoto, AcademicCalendar, FAQ,
+    PageContent, ContactMessage, Senator, Committee,
+)
 
 
-class AnnouncementPhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AnnouncementPhoto
-        fields = ['id', 'image', 'caption', 'order']
+class AnnouncementPhotoInline(admin.TabularInline):
+    model = AnnouncementPhoto
+    extra = 3
+    fields = ['image', 'caption', 'order']
 
 
-class AnnouncementSerializer(serializers.ModelSerializer):
-    photos = AnnouncementPhotoSerializer(many=True, read_only=True)
-    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
-    category_display = serializers.CharField(source='get_category_display', read_only=True)
-    priority_display = serializers.CharField(source='get_priority_display', read_only=True)
+@admin.register(Announcement)
+class AnnouncementAdmin(admin.ModelAdmin):
+    """News, events, projects and programs posts (shown on the Announcements page)."""
+    list_display = ['title', 'category', 'priority', 'is_published', 'is_pinned', 'published_at']
+    list_filter = ['category', 'priority', 'is_published', 'is_pinned']
+    search_fields = ['title', 'content']
+    date_hierarchy = 'published_at'
+    inlines = [AnnouncementPhotoInline]
+    fieldsets = [
+        (None, {'fields': ['title', 'category', 'priority', 'content', 'excerpt']}),
+        ('Media', {'fields': ['featured_image', 'attachment', 'video_url', 'video_file']}),
+        ('Publishing', {'fields': ['is_published', 'is_pinned', 'published_at', 'expires_at']}),
+    ]
 
-    class Meta:
-        model = Announcement
-        fields = [
-            'id', 'title', 'slug', 'content', 'excerpt', 'category',
-            'category_display', 'priority', 'priority_display',
-            'featured_image', 'photos', 'attachment', 'video_url', 'video_file', 'author_name',
-            'is_published', 'is_pinned', 'published_at', 'expires_at',
-            'view_count', 'created_at', 'updated_at'
-        ]
-        read_only_fields = ['slug', 'view_count', 'created_at', 'updated_at']
-
-
-class AnnouncementListSerializer(serializers.ModelSerializer):
-    """Lightweight serializer for list views."""
-    author_name = serializers.CharField(source='author.get_full_name', read_only=True)
-    photos = AnnouncementPhotoSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Announcement
-        fields = ['id', 'title', 'slug', 'content', 'excerpt', 'category', 'priority', 
-                  'featured_image', 'photos', 'video_url', 'video_file', 'is_pinned', 'published_at', 'author_name']
+    def save_model(self, request, obj, form, change):
+        if not obj.author_id:
+            obj.author = request.user
+        if obj.is_published and not obj.published_at:
+            obj.published_at = timezone.now()
+        super().save_model(request, obj, form, change)
 
 
-class AcademicCalendarSerializer(serializers.ModelSerializer):
-    event_type_display = serializers.CharField(source='get_event_type_display', read_only=True)
-
-    class Meta:
-        model = AcademicCalendar
-        fields = [
-            'id', 'title', 'description', 'event_type', 'event_type_display',
-            'start_date', 'end_date', 'start_time', 'end_time',
-            'location', 'is_all_day', 'is_academic', 'is_recurring'
-        ]
+@admin.register(AcademicCalendar)
+class AcademicCalendarAdmin(admin.ModelAdmin):
+    """Events shown on the Calendar page."""
+    list_display = ['title', 'event_type', 'start_date', 'end_date', 'location']
+    list_filter = ['event_type', 'is_academic']
+    search_fields = ['title', 'description', 'location']
+    date_hierarchy = 'start_date'
 
 
-class FAQSerializer(serializers.ModelSerializer):
-    category_display = serializers.CharField(source='get_category_display', read_only=True)
-
-    class Meta:
-        model = FAQ
-        fields = ['id', 'question', 'answer', 'category', 'category_display', 'order', 'view_count']
-
-
-class PageContentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PageContent
-        fields = ['id', 'page', 'title', 'content', 'last_updated']
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ['question', 'category', 'order', 'is_published']
+    list_filter = ['category', 'is_published']
+    search_fields = ['question', 'answer']
+    list_editable = ['order', 'is_published']
 
 
-class SenatorSerializer(serializers.ModelSerializer):
-    position_display = serializers.CharField(source='get_position_display', read_only=True)
+@admin.register(PageContent)
+class PageContentAdmin(admin.ModelAdmin):
+    list_display = ['page', 'title', 'last_updated']
 
-    class Meta:
-        model = Senator
-        fields = [
-            'id', 'name', 'photo', 'position', 'position_display',
-            'department', 'bio', 'term', 'order', 'is_active',
-        ]
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
 
 
-class SenatorBriefSerializer(serializers.ModelSerializer):
-    """Lightweight senator representation for nesting inside committees."""
-    position_display = serializers.CharField(source='get_position_display', read_only=True)
-
-    class Meta:
-        model = Senator
-        fields = ['id', 'name', 'photo', 'position', 'position_display']
-
-
-class CommitteeSerializer(serializers.ModelSerializer):
-    chairperson = SenatorBriefSerializer(read_only=True)
-    chairperson_id = serializers.PrimaryKeyRelatedField(
-        source='chairperson', queryset=Senator.objects.all(), write_only=True, required=False, allow_null=True
-    )
-    members = SenatorBriefSerializer(many=True, read_only=True)
-    member_ids = serializers.PrimaryKeyRelatedField(
-        source='members', queryset=Senator.objects.all(), write_only=True, many=True, required=False
-    )
-
-    class Meta:
-        model = Committee
-        fields = [
-            'id', 'name', 'description', 'chairperson', 'chairperson_id',
-            'members', 'member_ids', 'order', 'is_active',
-        ]
+@admin.register(Senator)
+class SenatorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'position', 'department', 'term', 'order', 'is_active']
+    list_filter = ['position', 'term', 'is_active']
+    search_fields = ['name', 'department']
+    list_editable = ['order', 'is_active']
 
 
-class ContactMessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ContactMessage
-        fields = ['id', 'name', 'email', 'subject', 'message', 'status', 'created_at']
-        read_only_fields = ['status', 'created_at']
+@admin.register(Committee)
+class CommitteeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'chairperson', 'order', 'is_active']
+    list_filter = ['is_active']
+    filter_horizontal = ['members']
+    list_editable = ['order', 'is_active']
 
 
-class ContactMessageAdminSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ContactMessage
-        fields = '__all__'
-        read_only_fields = ['created_at']
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ['subject', 'name', 'email', 'status', 'created_at']
+    list_filter = ['status']
+    search_fields = ['name', 'email', 'subject', 'message']
+    readonly_fields = ['created_at']

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { COLLEGE_NAME } from '../utils/constants';
 import PhotoGallery from '../components/PhotoGallery';
+import sealLogo from '../assets/logo.png';
 
 // Founded year, motto, and location are taken from the college seal itself.
 // Mission/Vision/Core Values/Hymn belong to the college (EECP) specifically,
@@ -203,13 +204,29 @@ const VISION = 'EMA EMITS COLLEGE PHILIPPINES is a strong institution, taking th
 const CORE_VALUES = 'EMA EMITS COLLEGE PHILIPPINES is guided by the core values of faith, love and justice. It envisions graduates who believe in God deeply rooted in faith, share their fellowmen and country with unconditional love, and actively participating in building a society where justice prevails through the advancement of human knowledge and upliftment of morality to prepare them for a positive social transformation as desirable citizens in a dynamic social milieu.';
 
 const InfoSection = ({ title, text }) => (
-  <section className="mb-8">
-    <h2 className="text-xl font-bold mb-2">{title}</h2>
-    <div className="card-accent p-6">
+  <section className="mb-8 rounded-lg overflow-hidden shadow-md border border-gray-200">
+    {/* Maroon title banner, like the campus posters */}
+    <div className="bg-primary-800 border-b-4 border-accent-500 px-6 py-4 text-center">
+      <h2 className="font-display text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-white">
+        {title}
+      </h2>
+    </div>
+    {/* Light panel with the college seal as a faded watermark */}
+    <div className="relative bg-gray-50 px-6 py-10 sm:px-12 sm:py-14">
+      <img
+        src={sealLogo}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 m-auto h-4/5 max-h-96 w-auto opacity-[0.07] pointer-events-none select-none"
+      />
       {text ? (
-        <p className="text-gray-700 leading-relaxed whitespace-pre-line">{text}</p>
+        <p className="relative text-center text-primary-800 font-bold text-lg sm:text-xl leading-relaxed whitespace-pre-line">
+          {text}
+        </p>
       ) : (
-        <p className="text-gray-500 text-sm italic">The official {title.toLowerCase()} will be posted here soon.</p>
+        <p className="relative text-center text-gray-500 text-sm italic">
+          The official {title.toLowerCase()} will be posted here soon.
+        </p>
       )}
     </div>
   </section>
@@ -305,9 +322,9 @@ const HistoryTabs = () => {
       {/* Mission/Vision/Core Values/Hymn are EECP (college) specific */}
       {active === 'college' && (
         <>
-          <InfoSection title="Mission" text={MISSION} />
-          <InfoSection title="Vision" text={VISION} />
-          <InfoSection title="Core Values" text={CORE_VALUES} />
+          <InfoSection title="Mission Statement" text={MISSION} />
+          <InfoSection title="Vision Statement" text={VISION} />
+          <InfoSection title="Educational Philosophy" text={CORE_VALUES} />
           <HymnSection />
         </>
       )}

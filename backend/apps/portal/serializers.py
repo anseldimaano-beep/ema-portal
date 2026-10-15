@@ -1,8 +1,15 @@
 from rest_framework import serializers
-from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+from .models import Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+
+
+class AnnouncementPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnnouncementPhoto
+        fields = ['id', 'image', 'caption', 'order']
 
 
 class AnnouncementSerializer(serializers.ModelSerializer):
+    photos = AnnouncementPhotoSerializer(many=True, read_only=True)
     author_name = serializers.CharField(source='author.get_full_name', read_only=True)
     category_display = serializers.CharField(source='get_category_display', read_only=True)
     priority_display = serializers.CharField(source='get_priority_display', read_only=True)
@@ -12,7 +19,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'slug', 'content', 'excerpt', 'category',
             'category_display', 'priority', 'priority_display',
-            'featured_image', 'attachment', 'video_url', 'video_file', 'author_name',
+            'featured_image', 'photos', 'attachment', 'video_url', 'video_file', 'author_name',
             'is_published', 'is_pinned', 'published_at', 'expires_at',
             'view_count', 'created_at', 'updated_at'
         ]
@@ -22,11 +29,12 @@ class AnnouncementSerializer(serializers.ModelSerializer):
 class AnnouncementListSerializer(serializers.ModelSerializer):
     """Lightweight serializer for list views."""
     author_name = serializers.CharField(source='author.get_full_name', read_only=True)
+    photos = AnnouncementPhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Announcement
         fields = ['id', 'title', 'slug', 'content', 'excerpt', 'category', 'priority', 
-                  'featured_image', 'video_url', 'video_file', 'is_pinned', 'published_at', 'author_name']
+                  'featured_image', 'photos', 'video_url', 'video_file', 'is_pinned', 'published_at', 'author_name']
 
 
 class AcademicCalendarSerializer(serializers.ModelSerializer):

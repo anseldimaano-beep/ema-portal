@@ -5,6 +5,7 @@ import api from '../services/api';
 import { formatDate } from '../utils/helpers';
 import eemgSeal from '../assets/eemg_seal.webp';
 import VideoEmbed from '../components/VideoEmbed';
+import { APPOINTED } from '../data/government';
 
 // Hero image + pagination, styled after the Senate site's
 // "Latest Photo Releases" module: an eyebrow label, headline, excerpt and
@@ -85,12 +86,13 @@ const STATS = [
   { label: 'Senators', value: '12' },
   { label: 'Committees', value: '6' },
   { label: 'Representative Groups', value: '5' },
+  { label: 'Appointed', value: APPOINTED.length > 0 ? String(APPOINTED.length) : 'TBA' },
   { label: 'Founded', value: '2012' }
 ];
 
 const StatsStrip = () => (
   <div className="bg-primary-900 border-b-4 border-accent-400">
-    <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
       {STATS.map((s) => (
         <div key={s.label}>
           <div className="text-3xl md:text-4xl font-extrabold text-white">{s.value}</div>

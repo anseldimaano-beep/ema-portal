@@ -28,6 +28,7 @@ class Announcement(models.Model):
         EMERGENCY = 'emergency', 'Emergency'
         ENROLLMENT = 'enrollment', 'Enrollment'
         SCHOLARSHIP = 'scholarship', 'Scholarship'
+        UPCOMING = 'upcoming', 'Upcoming'
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)

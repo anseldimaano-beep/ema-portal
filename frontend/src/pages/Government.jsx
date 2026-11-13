@@ -4,10 +4,13 @@ import api from '../services/api';
 
 // A.Y. 2026-2027 roster, names only. Used as a fallback whenever the API
 // has no records yet, so the page isn't empty before the backend is seeded.
-const OFFICERS = [
+const EXECUTIVE = [
   { title: 'President', name: 'Glendel I. Manipol' },
   { title: 'Vice President', name: 'Vincent De Mesa' }
 ];
+
+// Appointed officials. Add entries as { title: 'Position', name: 'Full Name' }.
+const APPOINTED = [];
 
 const SENATORS = [
   'Manalo, Zandro',
@@ -98,7 +101,8 @@ const NameList = ({ names, chair }) => (
 // Mirrors the pill-tab pattern used on the About page's "Our History"
 // section: one row of rounded-full buttons, one section rendered at a time.
 const GOV_TABS = [
-  { key: 'officers', label: 'Officers' },
+  { key: 'executive', label: 'Executive' },
+  { key: 'appointed', label: 'Appointed' },
   { key: 'senators', label: 'Senators' },
   { key: 'representatives', label: 'Representatives' },
   { key: 'committees', label: 'Committees' }
@@ -142,7 +146,7 @@ const Government = () => {
       <div className="eyebrow mb-3">The Government</div>
       <h1 className="text-3xl font-bold mb-2">EEMG Model Government</h1>
       <p className="text-gray-600 mb-10 max-w-2xl">
-        Officers, senators, representatives, and committees of the EMA EMITS Model Government, A.Y. 2026-2027.
+        Executive, appointed officials, senators, representatives, and committees of the EMA EMITS Model Government, A.Y. 2026-2027.
       </p>
 
       <div className="flex flex-wrap gap-2 mb-10">
@@ -161,18 +165,37 @@ const Government = () => {
         ))}
       </div>
 
-      {/* Officers */}
-      {active === 'officers' && (
+      {/* Executive */}
+      {active === 'executive' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Officers</h2>
+          <h2 className="text-2xl font-bold mb-6">Executive</h2>
           <div className="grid sm:grid-cols-2 gap-6">
-            {OFFICERS.map((o) => (
+            {EXECUTIVE.map((o) => (
               <div key={o.title} className="card-accent p-6">
                 <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.title}</p>
                 <p className="text-lg font-bold text-gray-900">{o.name}</p>
               </div>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* Appointed */}
+      {active === 'appointed' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Appointed</h2>
+          {APPOINTED.length > 0 ? (
+            <div className="grid sm:grid-cols-2 gap-6">
+              {APPOINTED.map((o) => (
+                <div key={o.title} className="card-accent p-6">
+                  <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.title}</p>
+                  <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">Appointed officials will be announced soon.</p>
+          )}
         </section>
       )}
 

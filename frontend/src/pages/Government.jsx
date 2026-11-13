@@ -102,9 +102,9 @@ const NameList = ({ names, chair }) => (
 // section: one row of rounded-full buttons, one section rendered at a time.
 const GOV_TABS = [
   { key: 'executive', label: 'Executive' },
-  { key: 'appointed', label: 'Appointed' },
   { key: 'senators', label: 'Senators' },
   { key: 'representatives', label: 'Representatives' },
+  { key: 'appointed', label: 'Appointed' },
   { key: 'committees', label: 'Committees' }
 ];
 
@@ -146,7 +146,7 @@ const Government = () => {
       <div className="eyebrow mb-3">The Government</div>
       <h1 className="text-3xl font-bold mb-2">EEMG Model Government</h1>
       <p className="text-gray-600 mb-10 max-w-2xl">
-        Executive, appointed officials, senators, representatives, and committees of the EMA EMITS Model Government, A.Y. 2026-2027.
+        Executive, senators, representatives, appointed officials, and committees of the EMA EMITS Model Government, A.Y. 2026-2027.
       </p>
 
       <div className="flex flex-wrap gap-2 mb-10">

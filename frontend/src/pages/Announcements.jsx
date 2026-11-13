@@ -12,7 +12,8 @@ const CATEGORY_LABELS = {
   administrative: 'Administrative',
   event: 'Event',
   emergency: 'Emergency',
-  enrollment: 'Enrollment'
+  enrollment: 'Enrollment',
+  upcoming: 'Upcoming'
 };
 
 const CATEGORY_FILTERS = [{ value: 'all', label: 'All' }, ...Object.entries(CATEGORY_LABELS).map(

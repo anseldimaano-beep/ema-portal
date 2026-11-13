@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../services/api';
+import { EXECUTIVE, APPOINTED } from '../data/government';
 
 // A.Y. 2026-2027 roster, names only. Used as a fallback whenever the API
 // has no records yet, so the page isn't empty before the backend is seeded.
-const EXECUTIVE = [
-  { title: 'President', name: 'Glendel I. Manipol' },
-  { title: 'Vice President', name: 'Vincent De Mesa' }
-];
 
-// Appointed officials. Add entries as { title: 'Position', name: 'Full Name' }.
-const APPOINTED = [];
 
 const SENATORS = [
   'Manalo, Zandro',

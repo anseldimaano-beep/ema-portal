@@ -5,7 +5,6 @@ import api from '../services/api';
 import { formatDate } from '../utils/helpers';
 import eemgSeal from '../assets/eemg_seal.webp';
 import VideoEmbed from '../components/VideoEmbed';
-import { APPOINTED } from '../data/government';
 
 // Hero image + pagination, styled after the Senate site's
 // "Latest Photo Releases" module: an eyebrow label, headline, excerpt and
@@ -82,26 +81,51 @@ const HeroCarousel = ({ slides }) => {
     </div>
   );
 };
-const STATS = [
-  { label: 'Senators', value: '12' },
-  { label: 'Committees', value: '6' },
-  { label: 'Representative Groups', value: '5' },
-  { label: 'Appointed', value: APPOINTED.length > 0 ? String(APPOINTED.length) : 'TBA' },
-  { label: 'Founded', value: '2012' }
-];
+const StatsStrip = () => {
+  const [counts, setCounts] = useState(null);
 
-const StatsStrip = () => (
-  <div className="bg-primary-900 border-b-4 border-accent-400">
-    <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
-      {STATS.map((s) => (
-        <div key={s.label}>
-          <div className="text-3xl md:text-4xl font-extrabold text-white">{s.value}</div>
-          <div className="text-xs md:text-sm font-semibold text-primary-200 uppercase tracking-wide mt-1.5">{s.label}</div>
-        </div>
-      ))}
+  useEffect(() => {
+    const list = (path) => api.get(path).then((res) => res.data.results || res.data || []);
+    Promise.all([
+      list('/portal/senators/'),
+      list('/portal/committees/'),
+      list('/portal/representatives/'),
+      list('/portal/appointed/')
+    ])
+      .then(([senators, committees, reps, appointed]) =>
+        setCounts({
+          senators: senators.length,
+          committees: committees.length,
+          groups: new Set(reps.map((r) => r.group)).size,
+          appointed: appointed.length
+        })
+      )
+      .catch(() => setCounts(null));
+  }, []);
+
+  const show = (key) => (counts ? String(counts[key]) : '–');
+
+  const stats = [
+    { label: 'Senators', value: show('senators') },
+    { label: 'Committees', value: show('committees') },
+    { label: 'Representative Groups', value: show('groups') },
+    { label: 'Appointed', value: show('appointed') },
+    { label: 'Founded', value: '2012' }
+  ];
+
+  return (
+    <div className="bg-primary-900 border-b-4 border-accent-400">
+      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+        {stats.map((s) => (
+          <div key={s.label}>
+            <div className="text-3xl md:text-4xl font-extrabold text-white">{s.value}</div>
+            <div className="text-xs md:text-sm font-semibold text-primary-200 uppercase tracking-wide mt-1.5">{s.label}</div>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CATEGORY_LABELS = {
   general: 'General',

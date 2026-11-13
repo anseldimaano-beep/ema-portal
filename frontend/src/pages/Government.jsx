@@ -1,71 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../services/api';
-import { EXECUTIVE, APPOINTED } from '../data/government';
-
-// A.Y. 2026-2027 roster, names only. Used as a fallback whenever the API
-// has no records yet, so the page isn't empty before the backend is seeded.
-
-
-const SENATORS = [
-  'Manalo, Zandro',
-  'Bayhon, Jamailah',
-  'Villa, Kate Angela',
-  'Sales, Regielyn',
-  'Rafol, John Philip',
-  'Recaro, Benedict',
-  'Francisco, Joshua',
-  'Matining, Bryan',
-  'Tan, Princess',
-  'Cabatian, Milky',
-  'Marayan, Nathan Rein',
-  'Verdadero, Angela'
-];
-
-const REPRESENTATIVES = [
-  { group: 'CBM Representatives', members: ['Avelino, Kane Lee', 'Malubag, Jennelyn'] },
-  { group: 'CCS Representatives', members: ['Sadicon, Marishel Ayesha', 'Sotto, Kristine Joy'] },
-  { group: 'CTE Representatives (Secondary)', members: ['Oliver, Rencel Jake', 'Paner, Benedict', 'Regalario, Shaira'] },
-  { group: 'CTE Representatives (Elementary)', members: ['Florencondia, Marian', 'Sabalvaro, Angelica'] },
-  { group: 'CHM Representatives', members: ['Mercado, Charisse', 'Reyes, Mary Jane'] }
-];
-
-const COMMITTEES = [
-  { name: 'Finance', chair: 'Manalo, Zandro', members: ['Manalo, Zandro', 'Brucal, Jana Mae', 'Malubag, Jennelyn', 'Abel, Nicole'] },
-  {
-    name: 'Security & Safety',
-    chair: 'Matining, Bryan',
-    members: ['Matining, Bryan', 'Matining, Aeron', 'Mercado, Charisse', 'Manalon, Jericho', 'Oliver, Rencel Jake']
-  },
-  {
-    name: 'Waste & Classroom Management',
-    chair: 'Recaro, Benedict',
-    members: ['Recaro, Benedict', 'Avelino, Kane Lee', 'Verdadero, Angela', 'Sabalvaro, Angelica']
-  },
-  {
-    name: 'Media',
-    chair: 'Bayhon, Jamailah',
-    members: ['Bayhon, Jamailah', 'Dimaapi, Ansel John', 'Cabatian, Milky', 'Sadicon, Marishel Ayesha', 'Reyes, Mary Jane']
-  },
-  {
-    name: 'Rules & Regulations and By-Laws',
-    chair: 'Sales, Regielyn',
-    members: ['Sales, Regielyn', 'Regalario, Shaira', 'Paner, Benedict', 'Villa, Kate Angela']
-  },
-  {
-    name: 'Events',
-    chair: 'Rafol, John Philip',
-    members: [
-      'Rafol, John Philip',
-      'Fransisco, Joshua',
-      'Marayan, Nathan Rein',
-      'Tan, Princess',
-      'Harper, Jaz Xavier',
-      'Sotto, Kristine Joy',
-      'Florencondia, Marian'
-    ]
-  }
-];
 
 const NameList = ({ names, chair }) => (
   <ul className="mt-3 space-y-1.5">
@@ -103,22 +38,44 @@ const GOV_TABS = [
   { key: 'committees', label: 'Committees' }
 ];
 
+const asList = (res) => res.data.results || res.data || [];
+
 const Government = () => {
+  const [executive, setExecutive] = useState([]);
   const [senators, setSenators] = useState([]);
+  const [representatives, setRepresentatives] = useState([]);
+  const [appointed, setAppointed] = useState([]);
   const [committees, setCommittees] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(GOV_TABS[0].key);
   const { hash } = useLocation();
 
   useEffect(() => {
-    api
-      .get('/portal/senators/')
-      .then((res) => setSenators(res.data.results || res.data || []))
-      .catch(() => setSenators([]));
+    const load = (path, setter) =>
+      api
+        .get(path)
+        .then((res) => setter(asList(res)))
+        .catch(() => setter([]));
 
-    api
-      .get('/portal/committees/')
-      .then((res) => setCommittees(res.data.results || res.data || []))
-      .catch(() => setCommittees([]));
+    Promise.all([
+      load('/portal/executive/', setExecutive),
+      load('/portal/senators/', setSenators),
+      load('/portal/representatives/', setRepresentatives),
+      load('/portal/appointed/', setAppointed),
+      load('/portal/committees/', setCommittees)
+    ]).finally(() => setLoading(false));
+  }, []);
+
+  // Representatives come back as a flat list; group them by `group`,
+  // keeping the order they were entered in the admin.
+  const repGroups = representatives.reduce((acc, r) => {
+    let g = acc.find((x) => x.group === r.group);
+    if (!g) {
+      g = { group: r.group, members: [] };
+      acc.push(g);
+    }
+    g.members.push(r.name);
+    return acc;
   }, []);
 
   // Navbar links to /government#senators and /government#committees. Same
@@ -131,10 +88,9 @@ const Government = () => {
     }
   }, [hash]);
 
-  // Prefer live API data once the backend is seeded; otherwise show the
-  // A.Y. 2026-2027 roster as-is.
-  const hasApiSenators = senators.length > 0;
-  const hasApiCommittees = committees.length > 0;
+  const Empty = ({ children }) => (
+    <p className="text-gray-500">{loading ? 'Loading…' : children}</p>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
@@ -164,32 +120,17 @@ const Government = () => {
       {active === 'executive' && (
         <section>
           <h2 className="text-2xl font-bold mb-6">Executive</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
-            {EXECUTIVE.map((o) => (
-              <div key={o.title} className="card-accent p-6">
-                <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.title}</p>
-                <p className="text-lg font-bold text-gray-900">{o.name}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Appointed */}
-      {active === 'appointed' && (
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Appointed</h2>
-          {APPOINTED.length > 0 ? (
+          {executive.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-6">
-              {APPOINTED.map((o) => (
-                <div key={o.title} className="card-accent p-6">
-                  <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.title}</p>
+              {executive.map((o) => (
+                <div key={o.id} className="card-accent p-6">
+                  <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
                   <p className="text-lg font-bold text-gray-900">{o.name}</p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500">Appointed officials will be announced soon.</p>
+            <Empty>Executive officers will be announced soon.</Empty>
           )}
         </section>
       )}
@@ -198,23 +139,19 @@ const Government = () => {
       {active === 'senators' && (
         <section>
           <h2 className="text-2xl font-bold mb-6">Senators</h2>
-          {hasApiSenators ? (
+          {senators.length > 0 ? (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {senators.map((s) => (
                 <div key={s.id} className="card py-3 px-4">
                   <p className="font-semibold text-gray-900">{s.name}</p>
-                  {s.position_display && <p className="text-xs text-primary-700 mt-0.5">{s.position_display}</p>}
+                  {s.position && s.position !== 'senator' && s.position_display && (
+                    <p className="text-xs text-primary-700 mt-0.5">{s.position_display}</p>
+                  )}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {SENATORS.map((name) => (
-                <div key={name} className="card py-3 px-4">
-                  <p className="font-semibold text-gray-900">{name}</p>
-                </div>
-              ))}
-            </div>
+            <Empty>Senators will be announced soon.</Empty>
           )}
         </section>
       )}
@@ -223,14 +160,37 @@ const Government = () => {
       {active === 'representatives' && (
         <section>
           <h2 className="text-2xl font-bold mb-6">Representatives</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {REPRESENTATIVES.map((r) => (
-              <div key={r.group} className="card-accent p-6">
-                <h3 className="font-bold text-primary-900">{r.group}</h3>
-                <NameList names={r.members} />
-              </div>
-            ))}
-          </div>
+          {repGroups.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {repGroups.map((r) => (
+                <div key={r.group} className="card-accent p-6">
+                  <h3 className="font-bold text-primary-900">{r.group}</h3>
+                  <NameList names={r.members} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Empty>Representatives will be announced soon.</Empty>
+          )}
+        </section>
+      )}
+
+      {/* Appointed */}
+      {active === 'appointed' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Appointed</h2>
+          {appointed.length > 0 ? (
+            <div className="grid sm:grid-cols-2 gap-6">
+              {appointed.map((o) => (
+                <div key={o.id} className="card-accent p-6">
+                  <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
+                  <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Empty>Appointed officials will be announced soon.</Empty>
+          )}
         </section>
       )}
 
@@ -238,25 +198,23 @@ const Government = () => {
       {active === 'committees' && (
         <section>
           <h2 className="text-2xl font-bold mb-6">Committees</h2>
-          {hasApiCommittees ? (
-            <div className="grid md:grid-cols-2 gap-6">
-              {committees.map((c) => (
-                <div key={c.id} className="card-accent p-6">
-                  <h3 className="font-bold text-lg text-primary-900">{c.name}</h3>
-                  {c.description && <p className="text-gray-600 mt-2 text-sm">{c.description}</p>}
-                  {c.members?.length > 0 && <NameList names={c.members.map((m) => m.name)} />}
-                </div>
-              ))}
+          {committees.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {committees.map((c) => {
+                const roster = c.roster || [];
+                const chair = roster.find((m) => m.is_chairperson)?.name;
+                const names = roster.length > 0 ? roster.map((m) => m.name) : (c.members || []).map((m) => m.name);
+                return (
+                  <div key={c.id} className="card-accent p-6">
+                    <h3 className="font-bold text-primary-900">{c.name}</h3>
+                    {c.description && <p className="text-gray-600 mt-2 text-sm">{c.description}</p>}
+                    {names.length > 0 && <NameList names={names} chair={chair} />}
+                  </div>
+                );
+              })}
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {COMMITTEES.map((c) => (
-                <div key={c.name} className="card-accent p-6">
-                  <h3 className="font-bold text-primary-900">{c.name}</h3>
-                  <NameList names={c.members} chair={c.chair} />
-                </div>
-              ))}
-            </div>
+            <Empty>Committees will be announced soon.</Empty>
           )}
         </section>
       )}

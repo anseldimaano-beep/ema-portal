@@ -4,7 +4,8 @@ from django.utils import timezone
 
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ,
-    PageContent, ContactMessage, Senator, Committee,
+    PageContent, ContactMessage, Senator, Committee, CommitteeMember,
+    ExecutiveOfficer, AppointedOfficial, Representative,
 )
 
 
@@ -112,11 +113,44 @@ class SenatorAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
 
 
+class CommitteeMemberInline(admin.TabularInline):
+    model = CommitteeMember
+    extra = 3
+    fields = ['name', 'is_chairperson', 'order']
+    verbose_name = 'Member'
+    verbose_name_plural = 'Members (type each name as "Last, First"; tick Chairperson for the head)'
+
+
 @admin.register(Committee)
 class CommitteeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'chairperson', 'order', 'is_active']
+    list_display = ['name', 'order', 'is_active']
     list_filter = ['is_active']
-    filter_horizontal = ['members']
+    list_editable = ['order', 'is_active']
+    fields = ['name', 'description', 'order', 'is_active']
+    inlines = [CommitteeMemberInline]
+
+
+@admin.register(ExecutiveOfficer)
+class ExecutiveOfficerAdmin(admin.ModelAdmin):
+    list_display = ['name', 'position', 'term', 'order', 'is_active']
+    list_filter = ['term', 'is_active']
+    search_fields = ['name', 'position']
+    list_editable = ['order', 'is_active']
+
+
+@admin.register(AppointedOfficial)
+class AppointedOfficialAdmin(admin.ModelAdmin):
+    list_display = ['name', 'position', 'term', 'order', 'is_active']
+    list_filter = ['term', 'is_active']
+    search_fields = ['name', 'position']
+    list_editable = ['order', 'is_active']
+
+
+@admin.register(Representative)
+class RepresentativeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'group', 'term', 'order', 'is_active']
+    list_filter = ['group', 'term', 'is_active']
+    search_fields = ['name', 'group']
     list_editable = ['order', 'is_active']
 
 

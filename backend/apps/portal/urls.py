@@ -30,6 +30,11 @@ urlpatterns = [
     path('committees/manage/', views.CommitteeManageListView.as_view(), name='committee-manage-list'),
     path('committees/manage/<int:pk>/', views.CommitteeManageDetailView.as_view(), name='committee-manage-detail'),
 
+    # Executive, appointed officials, representatives
+    path('executive/', views.ExecutiveOfficerListView.as_view(), name='executive-list'),
+    path('appointed/', views.AppointedOfficialListView.as_view(), name='appointed-list'),
+    path('representatives/', views.RepresentativeListView.as_view(), name='representative-list'),
+
     # Pages
     path('pages/<str:page>/', views.PageContentView.as_view(), name='page-content'),
     path('pages/manage/', views.PageContentManageView.as_view(), name='page-manage'),

@@ -269,6 +269,85 @@ class Committee(models.Model):
         return self.name
 
 
+class GovernmentOfficial(models.Model):
+    """Shared fields for yearly-rotating officials shown on the Government page."""
+
+    name = models.CharField(max_length=150)
+    term = models.CharField(max_length=20, blank=True, help_text="e.g. 2026-2027")
+    order = models.PositiveSmallIntegerField(default=0, help_text="Lower numbers appear first")
+    is_active = models.BooleanField(default=True, help_text="Untick to hide from the website")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class ExecutiveOfficer(GovernmentOfficial):
+    """Executive officers (President, Vice President, ...) on the Government page."""
+
+    position = models.CharField(max_length=150, help_text="e.g. President")
+
+    class Meta:
+        db_table = 'executive_officers'
+        ordering = ['order', 'id']
+        verbose_name = 'Executive Officer'
+        verbose_name_plural = 'Executive Officers'
+
+    def __str__(self):
+        return f"{self.name} ({self.position})"
+
+
+class AppointedOfficial(GovernmentOfficial):
+    """Appointed officials on the Government page."""
+
+    position = models.CharField(max_length=150, help_text="e.g. Secretary")
+
+    class Meta:
+        db_table = 'appointed_officials'
+        ordering = ['order', 'id']
+        verbose_name = 'Appointed Official'
+        verbose_name_plural = 'Appointed Officials'
+
+    def __str__(self):
+        return f"{self.name} ({self.position})"
+
+
+class Representative(GovernmentOfficial):
+    """A representative, listed under their group on the Government page."""
+
+    group = models.CharField(max_length=150, help_text="e.g. CBM Representatives")
+
+    class Meta:
+        db_table = 'representatives'
+        ordering = ['order', 'id']
+        verbose_name = 'Representative'
+        verbose_name_plural = 'Representatives'
+
+    def __str__(self):
+        return f"{self.name} ({self.group})"
+
+
+class CommitteeMember(models.Model):
+    """A name on a committee's roster. Free text, so members can be senators,
+    representatives or anyone else."""
+
+    committee = models.ForeignKey(Committee, on_delete=models.CASCADE, related_name='roster')
+    name = models.CharField(max_length=150)
+    is_chairperson = models.BooleanField(default=False)
+    order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'committee_members'
+        ordering = ['order', 'id']
+        verbose_name = 'Committee member'
+        verbose_name_plural = 'Committee members'
+
+    def __str__(self):
+        return self.name
+
+
 class ContactMessage(models.Model):
     """Contact form submissions."""
 

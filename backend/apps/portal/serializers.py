@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+from .models import (
+    Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage,
+    Senator, Committee, CommitteeMember, ExecutiveOfficer, AppointedOfficial, Representative,
+)
 
 
 class AnnouncementPhotoSerializer(serializers.ModelSerializer):
@@ -83,7 +86,32 @@ class SenatorBriefSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'photo', 'position', 'position_display']
 
 
+class CommitteeMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommitteeMember
+        fields = ['id', 'name', 'is_chairperson', 'order']
+
+
+class ExecutiveOfficerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExecutiveOfficer
+        fields = ['id', 'name', 'position', 'term', 'order']
+
+
+class AppointedOfficialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppointedOfficial
+        fields = ['id', 'name', 'position', 'term', 'order']
+
+
+class RepresentativeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Representative
+        fields = ['id', 'name', 'group', 'term', 'order']
+
+
 class CommitteeSerializer(serializers.ModelSerializer):
+    roster = CommitteeMemberSerializer(many=True, read_only=True)
     chairperson = SenatorBriefSerializer(read_only=True)
     chairperson_id = serializers.PrimaryKeyRelatedField(
         source='chairperson', queryset=Senator.objects.all(), write_only=True, required=False, allow_null=True
@@ -97,7 +125,7 @@ class CommitteeSerializer(serializers.ModelSerializer):
         model = Committee
         fields = [
             'id', 'name', 'description', 'chairperson', 'chairperson_id',
-            'members', 'member_ids', 'order', 'is_active',
+            'members', 'member_ids', 'roster', 'order', 'is_active',
         ]
 
 

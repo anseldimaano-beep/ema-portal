@@ -6,13 +6,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
 from django.conf import settings
 from datetime import timedelta
-from .models import Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee
+from .models import (
+    Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee,
+    ExecutiveOfficer, AppointedOfficial, Representative,
+)
 from .email_utils import send_via_resend
 from .serializers import (
     AnnouncementSerializer, AnnouncementListSerializer,
     AcademicCalendarSerializer, FAQSerializer,
     PageContentSerializer, ContactMessageSerializer, ContactMessageAdminSerializer,
     SenatorSerializer, CommitteeSerializer,
+    ExecutiveOfficerSerializer, AppointedOfficialSerializer, RepresentativeSerializer,
 )
 from apps.accounts.permissions import IsAdmin, IsFacultyOrAdmin
 
@@ -180,7 +184,7 @@ class SenatorManageDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class CommitteeListView(generics.ListAPIView):
     """List active committees, with chairperson and members (public)."""
-    queryset = Committee.objects.filter(is_active=True).select_related('chairperson').prefetch_related('members')
+    queryset = Committee.objects.filter(is_active=True).select_related('chairperson').prefetch_related('members', 'roster')
     serializer_class = CommitteeSerializer
     permission_classes = [AllowAny]
     ordering = ['order', 'name']
@@ -205,6 +209,32 @@ class CommitteeManageDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Committee.objects.all().select_related('chairperson').prefetch_related('members')
     serializer_class = CommitteeSerializer
     permission_classes = [IsFacultyOrAdmin]
+
+
+# ==================== EXECUTIVE / APPOINTED / REPRESENTATIVES ====================
+
+class ExecutiveOfficerListView(generics.ListAPIView):
+    """List active executive officers (public)."""
+    queryset = ExecutiveOfficer.objects.filter(is_active=True)
+    serializer_class = ExecutiveOfficerSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+
+class AppointedOfficialListView(generics.ListAPIView):
+    """List active appointed officials (public)."""
+    queryset = AppointedOfficial.objects.filter(is_active=True)
+    serializer_class = AppointedOfficialSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+
+class RepresentativeListView(generics.ListAPIView):
+    """List active representatives (public)."""
+    queryset = Representative.objects.filter(is_active=True)
+    serializer_class = RepresentativeSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
 
 
 # ==================== CONTACT ====================

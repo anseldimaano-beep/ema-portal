@@ -13,7 +13,8 @@ const CATEGORY_LABELS = {
   event: 'Event',
   emergency: 'Emergency',
   enrollment: 'Enrollment',
-  upcoming: 'Upcoming'
+  upcoming: 'Upcoming Events',
+  project: 'Projects'
 };
 
 const CATEGORY_FILTERS = [{ value: 'all', label: 'All' }, ...Object.entries(CATEGORY_LABELS).map(

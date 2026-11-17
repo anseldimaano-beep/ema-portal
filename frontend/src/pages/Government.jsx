@@ -2,6 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 
+const initials = (name = '') => {
+  const parts = name.includes(',')
+    ? name.split(',').map((p) => p.trim()).reverse() // "Last, First" -> First Last
+    : name.trim().split(/\s+/);
+  const words = parts.join(' ').split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '?';
+  return (words[0][0] + (words.length > 1 ? words[words.length - 1][0] : '')).toUpperCase();
+};
+
+const Avatar = ({ photo, name, size = 'h-14 w-14', text = 'text-base' }) =>
+  photo ? (
+    <img
+      src={photo}
+      alt={name}
+      loading="lazy"
+      className={`${size} rounded-full object-cover flex-shrink-0 border-2 border-accent-300 bg-gray-100`}
+    />
+  ) : (
+    <div
+      aria-hidden="true"
+      className={`${size} ${text} rounded-full flex-shrink-0 flex items-center justify-center font-bold bg-primary-100 text-primary-800 border-2 border-primary-200`}
+    >
+      {initials(name)}
+    </div>
+  );
+
 const NameList = ({ names, chair }) => (
   <ul className="mt-3 space-y-1.5">
     {names.map((n) => {
@@ -74,7 +100,7 @@ const Government = () => {
       g = { group: r.group, members: [] };
       acc.push(g);
     }
-    g.members.push(r.name);
+    g.members.push(r);
     return acc;
   }, []);
 
@@ -123,9 +149,12 @@ const Government = () => {
           {executive.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-6">
               {executive.map((o) => (
-                <div key={o.id} className="card-accent p-6">
-                  <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
-                  <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                <div key={o.id} className="card-accent p-6 flex items-center gap-4">
+                  <Avatar photo={o.photo} name={o.name} size="h-20 w-20" text="text-xl" />
+                  <div>
+                    <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
+                    <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -142,11 +171,14 @@ const Government = () => {
           {senators.length > 0 ? (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {senators.map((s) => (
-                <div key={s.id} className="card py-3 px-4">
-                  <p className="font-semibold text-gray-900">{s.name}</p>
-                  {s.position && s.position !== 'senator' && s.position_display && (
-                    <p className="text-xs text-primary-700 mt-0.5">{s.position_display}</p>
-                  )}
+                <div key={s.id} className="card py-3 px-4 flex items-center gap-3">
+                  <Avatar photo={s.photo} name={s.name} size="h-12 w-12" text="text-sm" />
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900">{s.name}</p>
+                    {s.position && s.position !== 'senator' && s.position_display && (
+                      <p className="text-xs text-primary-700 mt-0.5">{s.position_display}</p>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -165,7 +197,14 @@ const Government = () => {
               {repGroups.map((r) => (
                 <div key={r.group} className="card-accent p-6">
                   <h3 className="font-bold text-primary-900">{r.group}</h3>
-                  <NameList names={r.members} />
+                  <ul className="mt-3 space-y-2.5">
+                    {r.members.map((m) => (
+                      <li key={m.id} className="flex items-center gap-3 text-sm text-gray-700">
+                        <Avatar photo={m.photo} name={m.name} size="h-9 w-9" text="text-xs" />
+                        <span>{m.name}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>
@@ -182,9 +221,12 @@ const Government = () => {
           {appointed.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-6">
               {appointed.map((o) => (
-                <div key={o.id} className="card-accent p-6">
-                  <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
-                  <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                <div key={o.id} className="card-accent p-6 flex items-center gap-4">
+                  <Avatar photo={o.photo} name={o.name} size="h-20 w-20" text="text-xl" />
+                  <div>
+                    <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
+                    <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                  </div>
                 </div>
               ))}
             </div>

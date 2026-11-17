@@ -222,7 +222,7 @@ class Senator(models.Model):
         SECRETARY = 'secretary', 'Secretary'
 
     name = models.CharField(max_length=150)
-    photo = models.ImageField(upload_to='senators/%Y/%m/', blank=True)
+    photo = models.ImageField(upload_to='senators/%Y/%m/', blank=True, help_text="Optional photo")
     position = models.CharField(max_length=20, choices=Position.choices, default=Position.SENATOR)
     department = models.CharField(max_length=150, blank=True, help_text="e.g. College of Computer Studies")
     bio = models.TextField(blank=True)
@@ -274,6 +274,7 @@ class GovernmentOfficial(models.Model):
     """Shared fields for yearly-rotating officials shown on the Government page."""
 
     name = models.CharField(max_length=150)
+    photo = models.ImageField(upload_to='government/%Y/%m/', blank=True, help_text="Optional photo")
     term = models.CharField(max_length=20, blank=True, help_text="e.g. 2026-2027")
     order = models.PositiveSmallIntegerField(default=0, help_text="Lower numbers appear first")
     is_active = models.BooleanField(default=True, help_text="Untick to hide from the website")

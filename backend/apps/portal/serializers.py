@@ -95,19 +95,19 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
 class ExecutiveOfficerSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExecutiveOfficer
-        fields = ['id', 'name', 'position', 'term', 'order']
+        fields = ['id', 'name', 'photo', 'position', 'term', 'order']
 
 
 class AppointedOfficialSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppointedOfficial
-        fields = ['id', 'name', 'position', 'term', 'order']
+        fields = ['id', 'name', 'photo', 'position', 'term', 'order']
 
 
 class RepresentativeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Representative
-        fields = ['id', 'name', 'group', 'term', 'order']
+        fields = ['id', 'name', 'photo', 'group', 'term', 'order']
 
 
 class CommitteeSerializer(serializers.ModelSerializer):

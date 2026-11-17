@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.utils.html import format_html
 from django.utils import timezone
 
 from .models import (
@@ -105,9 +106,20 @@ class PageContentAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class PhotoPreviewMixin:
+    @admin.display(description='Photo')
+    def photo_preview(self, obj):
+        if obj.photo:
+            return format_html(
+                '<img src="{}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />',
+                obj.photo.url,
+            )
+        return '-'
+
+
 @admin.register(Senator)
-class SenatorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'position', 'department', 'term', 'order', 'is_active']
+class SenatorAdmin(PhotoPreviewMixin, admin.ModelAdmin):
+    list_display = ['photo_preview', 'name', 'position', 'department', 'term', 'order', 'is_active']
     list_filter = ['position', 'term', 'is_active']
     search_fields = ['name', 'department']
     list_editable = ['order', 'is_active']
@@ -131,24 +143,24 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 
 @admin.register(ExecutiveOfficer)
-class ExecutiveOfficerAdmin(admin.ModelAdmin):
-    list_display = ['name', 'position', 'term', 'order', 'is_active']
+class ExecutiveOfficerAdmin(PhotoPreviewMixin, admin.ModelAdmin):
+    list_display = ['photo_preview', 'name', 'position', 'term', 'order', 'is_active']
     list_filter = ['term', 'is_active']
     search_fields = ['name', 'position']
     list_editable = ['order', 'is_active']
 
 
 @admin.register(AppointedOfficial)
-class AppointedOfficialAdmin(admin.ModelAdmin):
-    list_display = ['name', 'position', 'term', 'order', 'is_active']
+class AppointedOfficialAdmin(PhotoPreviewMixin, admin.ModelAdmin):
+    list_display = ['photo_preview', 'name', 'position', 'term', 'order', 'is_active']
     list_filter = ['term', 'is_active']
     search_fields = ['name', 'position']
     list_editable = ['order', 'is_active']
 
 
 @admin.register(Representative)
-class RepresentativeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'group', 'term', 'order', 'is_active']
+class RepresentativeAdmin(PhotoPreviewMixin, admin.ModelAdmin):
+    list_display = ['photo_preview', 'name', 'group', 'term', 'order', 'is_active']
     list_filter = ['group', 'term', 'is_active']
     search_fields = ['name', 'group']
     list_editable = ['order', 'is_active']

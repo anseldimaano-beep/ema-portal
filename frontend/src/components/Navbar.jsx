@@ -13,14 +13,7 @@ const NAV_ITEMS = [
   { label: 'News', to: '/announcements' },
   { label: 'About', to: '/about' },
   { label: 'Project', to: '/project' },
-  {
-    label: 'Government',
-    to: '/government',
-    children: [
-      { label: 'Senators', to: '/government#senators' },
-      { label: 'Committees', to: '/government#committees' }
-    ]
-  },
+  { label: 'Government', to: '/government' },
   { label: 'Calendar', to: '/calendar' },
   { label: 'FAQ', to: '/faq' },
   { label: 'Contact', to: '/contact' }

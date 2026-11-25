@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import api from '../services/api';
 
 const PROJECT_PILLARS = [
   {
@@ -18,26 +19,11 @@ const PROJECT_PILLARS = [
   }
 ];
 
+// Add a year here AND in ProjectProgram.AcademicYear (backend/apps/portal/models.py).
 const YEARS = [
-  { key: 'ay2025', label: '2025-2026' },
-  { key: 'ay2026', label: '2026-2027' }
+  { key: '2025-2026', label: '2025-2026' },
+  { key: '2026-2027', label: '2026-2027' }
 ];
-
-// ADD YOUR CONTENT HERE. One entry per project/program, grouped by school year.
-// Fields: title (required), description (required), date (optional), status (optional)
-const PROJECTS = {
-  ay2025: [
-    // { title: 'Project name', description: 'What it is and what it achieved.', date: 'March 2026', status: 'Completed' },
-  ],
-  ay2026: []
-};
-
-const PROGRAMS = {
-  ay2025: [
-    // { title: 'Program name', description: 'What it is and who it is for.', date: 'Every semester' },
-  ],
-  ay2026: []
-};
 
 // Shared tabbed-by-term layout for the Project and Programs sections below.
 const YearTabSection = ({ title, placeholder, items }) => {
@@ -61,7 +47,7 @@ const YearTabSection = ({ title, placeholder, items }) => {
           </button>
         ))}
       </div>
-      {(items[active] || []).length === 0 ? (
+      {items.filter((i) => i.academic_year === active).length === 0 ? (
         <div className="card-accent p-6">
           <p className="text-gray-500 text-sm italic">
             {placeholder} for A.Y. {YEARS.find((y) => y.key === active).label}.
@@ -69,8 +55,8 @@ const YearTabSection = ({ title, placeholder, items }) => {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
-          {items[active].map((item) => (
-            <div key={item.title} className="card-accent p-6">
+          {items.filter((i) => i.academic_year === active).map((item) => (
+            <div key={item.id} className="card-accent p-6">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <h3 className="font-bold text-primary-900">{item.title}</h3>
                 {item.status && (
@@ -79,8 +65,16 @@ const YearTabSection = ({ title, placeholder, items }) => {
                   </span>
                 )}
               </div>
-              {item.date && <p className="text-xs text-gray-500 mb-2">{item.date}</p>}
-              <p className="text-gray-600 text-sm">{item.description}</p>
+              {item.date_label && <p className="text-xs text-gray-500 mb-2">{item.date_label}</p>}
+              {item.image && (
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  loading="lazy"
+                  className="w-full h-40 object-cover rounded-lg mb-3"
+                />
+              )}
+              <p className="text-gray-600 text-sm whitespace-pre-line">{item.description}</p>
             </div>
           ))}
         </div>
@@ -91,7 +85,20 @@ const YearTabSection = ({ title, placeholder, items }) => {
 
 // Standalone page describing the EEMG Model Government program itself -
 // separate from the homepage, which just summarizes the site's sections.
-const Project = () => (
+const Project = () => {
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    api
+      .get('/portal/projects/')
+      .then((res) => setEntries(res.data.results || res.data || []))
+      .catch(() => setEntries([]));
+  }, []);
+
+  const projects = entries.filter((e) => e.kind === 'project');
+  const programs = entries.filter((e) => e.kind === 'program');
+
+  return (
   <div className="max-w-5xl mx-auto px-4 py-16">
     <div className="eyebrow mb-3">The Project &amp; Programs</div>
     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -112,9 +119,10 @@ const Project = () => (
       ))}
     </div>
 
-    <YearTabSection title="Project" placeholder="Add the project details" items={PROJECTS} />
-    <YearTabSection title="Programs" placeholder="Add the program details" items={PROGRAMS} />
+    <YearTabSection title="Project" placeholder="No projects posted yet" items={projects} />
+    <YearTabSection title="Programs" placeholder="No programs posted yet" items={programs} />
   </div>
-);
+  );
+};
 
 export default Project;

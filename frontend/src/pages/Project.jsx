@@ -23,8 +23,24 @@ const YEARS = [
   { key: 'ay2026', label: '2026-2027' }
 ];
 
+// ADD YOUR CONTENT HERE. One entry per project/program, grouped by school year.
+// Fields: title (required), description (required), date (optional), status (optional)
+const PROJECTS = {
+  ay2025: [
+    // { title: 'Project name', description: 'What it is and what it achieved.', date: 'March 2026', status: 'Completed' },
+  ],
+  ay2026: []
+};
+
+const PROGRAMS = {
+  ay2025: [
+    // { title: 'Program name', description: 'What it is and who it is for.', date: 'Every semester' },
+  ],
+  ay2026: []
+};
+
 // Shared tabbed-by-term layout for the Project and Programs sections below.
-const YearTabSection = ({ title, placeholder }) => {
+const YearTabSection = ({ title, placeholder, items }) => {
   const [active, setActive] = useState(YEARS[0].key);
 
   return (
@@ -45,11 +61,30 @@ const YearTabSection = ({ title, placeholder }) => {
           </button>
         ))}
       </div>
-      <div className="card-accent p-6">
-        <p className="text-gray-500 text-sm italic">
-          {placeholder} for A.Y. {YEARS.find((y) => y.key === active).label}.
-        </p>
-      </div>
+      {(items[active] || []).length === 0 ? (
+        <div className="card-accent p-6">
+          <p className="text-gray-500 text-sm italic">
+            {placeholder} for A.Y. {YEARS.find((y) => y.key === active).label}.
+          </p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-6">
+          {items[active].map((item) => (
+            <div key={item.title} className="card-accent p-6">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h3 className="font-bold text-primary-900">{item.title}</h3>
+                {item.status && (
+                  <span className="text-xs font-semibold px-2 py-1 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
+                    {item.status}
+                  </span>
+                )}
+              </div>
+              {item.date && <p className="text-xs text-gray-500 mb-2">{item.date}</p>}
+              <p className="text-gray-600 text-sm">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };
@@ -77,8 +112,8 @@ const Project = () => (
       ))}
     </div>
 
-    <YearTabSection title="Project" placeholder="Add the project details" />
-    <YearTabSection title="Programs" placeholder="Add the program details" />
+    <YearTabSection title="Project" placeholder="Add the project details" items={PROJECTS} />
+    <YearTabSection title="Programs" placeholder="Add the program details" items={PROGRAMS} />
   </div>
 );
 

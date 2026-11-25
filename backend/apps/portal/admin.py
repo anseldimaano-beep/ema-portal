@@ -6,7 +6,7 @@ from django.utils import timezone
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ,
     PageContent, ContactMessage, Senator, Committee, CommitteeMember,
-    ExecutiveOfficer, AppointedOfficial, Representative,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram,
 )
 
 
@@ -172,3 +172,12 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ['status']
     search_fields = ['name', 'email', 'subject', 'message']
     readonly_fields = ['created_at']
+
+
+@admin.register(ProjectProgram)
+class ProjectProgramAdmin(admin.ModelAdmin):
+    """Projects and programs shown on the Project page."""
+    list_display = ['title', 'kind', 'academic_year', 'status', 'order', 'is_published']
+    list_filter = ['kind', 'academic_year', 'is_published']
+    search_fields = ['title', 'description']
+    list_editable = ['order', 'is_published']

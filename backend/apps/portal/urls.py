@@ -35,6 +35,9 @@ urlpatterns = [
     path('appointed/', views.AppointedOfficialListView.as_view(), name='appointed-list'),
     path('representatives/', views.RepresentativeListView.as_view(), name='representative-list'),
 
+    # Projects & programs
+    path('projects/', views.ProjectProgramListView.as_view(), name='project-program-list'),
+
     # Pages
     path('pages/<str:page>/', views.PageContentView.as_view(), name='page-content'),
     path('pages/manage/', views.PageContentManageView.as_view(), name='page-manage'),

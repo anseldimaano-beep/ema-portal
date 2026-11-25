@@ -8,7 +8,7 @@ from django.conf import settings
 from datetime import timedelta
 from .models import (
     Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee,
-    ExecutiveOfficer, AppointedOfficial, Representative,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram,
 )
 from .email_utils import send_via_resend
 from .serializers import (
@@ -17,6 +17,7 @@ from .serializers import (
     PageContentSerializer, ContactMessageSerializer, ContactMessageAdminSerializer,
     SenatorSerializer, CommitteeSerializer,
     ExecutiveOfficerSerializer, AppointedOfficialSerializer, RepresentativeSerializer,
+    ProjectProgramSerializer,
 )
 from apps.accounts.permissions import IsAdmin, IsFacultyOrAdmin
 
@@ -125,6 +126,18 @@ class FAQManageView(generics.ListCreateAPIView):
     queryset = FAQ.objects.all()
     serializer_class = FAQSerializer
     permission_classes = [IsFacultyOrAdmin]
+
+
+# ==================== PROJECTS & PROGRAMS ====================
+
+class ProjectProgramListView(generics.ListAPIView):
+    """Published projects and programs for the Project page (public)."""
+    queryset = ProjectProgram.objects.filter(is_published=True)
+    serializer_class = ProjectProgramSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['kind', 'academic_year']
 
 
 # ==================== PAGE CONTENT ====================

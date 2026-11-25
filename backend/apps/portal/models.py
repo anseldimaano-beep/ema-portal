@@ -380,3 +380,45 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.subject}"
+
+
+class ProjectProgram(models.Model):
+    """Projects and programs shown on the Project page, grouped by school year."""
+
+    class Kind(models.TextChoices):
+        PROJECT = 'project', 'Project'
+        PROGRAM = 'program', 'Program'
+
+    class AcademicYear(models.TextChoices):
+        AY_2025 = '2025-2026', '2025-2026'
+        AY_2026 = '2026-2027', '2026-2027'
+        AY_2027 = '2027-2028', '2027-2028'
+
+    kind = models.CharField(max_length=10, choices=Kind.choices, default=Kind.PROJECT)
+    academic_year = models.CharField(
+        max_length=9, choices=AcademicYear.choices, default=AcademicYear.AY_2026
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    date_label = models.CharField(
+        max_length=100, blank=True, help_text='Optional, e.g. "March 2026" or "Every semester"'
+    )
+    status = models.CharField(
+        max_length=50, blank=True, help_text='Optional badge, e.g. "Completed", "Ongoing", "Upcoming"'
+    )
+    image = models.ImageField(upload_to='projects/%Y/%m/', blank=True, help_text='Optional image')
+
+    order = models.PositiveSmallIntegerField(default=0)
+    is_published = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'project_programs'
+        ordering = ['order', '-created_at']
+        verbose_name = 'Project / Program'
+        verbose_name_plural = 'Projects & Programs'
+
+    def __str__(self):
+        return f"{self.get_kind_display()}: {self.title} ({self.academic_year})"

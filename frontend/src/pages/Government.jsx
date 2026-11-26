@@ -61,7 +61,8 @@ const GOV_TABS = [
   { key: 'senators', label: 'Senators' },
   { key: 'representatives', label: 'Representatives' },
   { key: 'appointed', label: 'Appointed' },
-  { key: 'committees', label: 'Committees' }
+  { key: 'committees', label: 'Committees' },
+  { key: 'advisers', label: 'Advisers' }
 ];
 
 const asList = (res) => res.data.results || res.data || [];
@@ -72,6 +73,7 @@ const Government = () => {
   const [representatives, setRepresentatives] = useState([]);
   const [appointed, setAppointed] = useState([]);
   const [committees, setCommittees] = useState([]);
+  const [advisers, setAdvisers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(GOV_TABS[0].key);
   const { hash } = useLocation();
@@ -88,7 +90,8 @@ const Government = () => {
       load('/portal/senators/', setSenators),
       load('/portal/representatives/', setRepresentatives),
       load('/portal/appointed/', setAppointed),
-      load('/portal/committees/', setCommittees)
+      load('/portal/committees/', setCommittees),
+      load('/portal/advisers/', setAdvisers)
     ]).finally(() => setLoading(false));
   }, []);
 
@@ -123,7 +126,7 @@ const Government = () => {
       <div className="eyebrow mb-3">The Government</div>
       <h1 className="text-3xl font-bold mb-2">EEMG Model Government</h1>
       <p className="text-gray-600 mb-10 max-w-2xl">
-        Executive, senators, representatives, appointed officials, and committees of the EMA EMITS Model Government, A.Y. 2026-2027.
+        Executive, senators, representatives, appointed officials, committees, and advisers of the EMA EMITS Model Government, A.Y. 2026-2027.
       </p>
 
       <div className="flex flex-wrap gap-2 mb-10">
@@ -257,6 +260,28 @@ const Government = () => {
             </div>
           ) : (
             <Empty>Committees will be announced soon.</Empty>
+          )}
+        </section>
+      )}
+
+      {/* Advisers */}
+      {active === 'advisers' && (
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Advisers</h2>
+          {advisers.length > 0 ? (
+            <div className="grid sm:grid-cols-2 gap-6">
+              {advisers.map((o) => (
+                <div key={o.id} className="card-accent p-6 flex items-center gap-4">
+                  <Avatar photo={o.photo} name={o.name} size="h-20 w-20" text="text-xl" />
+                  <div>
+                    <p className="text-xs font-bold tracking-wide uppercase text-primary-700 mb-1">{o.position}</p>
+                    <p className="text-lg font-bold text-gray-900">{o.name}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Empty>Advisers will be announced soon.</Empty>
           )}
         </section>
       )}

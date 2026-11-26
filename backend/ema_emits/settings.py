@@ -137,6 +137,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
+# Bulk photo uploads in the admin send many files in one request (Django's default cap is 100).
+DATA_UPLOAD_MAX_NUMBER_FILES = 200
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

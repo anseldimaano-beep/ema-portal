@@ -57,12 +57,12 @@ const NameList = ({ names, chair }) => (
 // Mirrors the pill-tab pattern used on the About page's "Our History"
 // section: one row of rounded-full buttons, one section rendered at a time.
 const GOV_TABS = [
+  { key: 'advisers', label: 'Advisers' },
   { key: 'executive', label: 'Executive' },
   { key: 'senators', label: 'Senators' },
   { key: 'representatives', label: 'Representatives' },
   { key: 'appointed', label: 'Appointed' },
-  { key: 'committees', label: 'Committees' },
-  { key: 'advisers', label: 'Advisers' }
+  { key: 'committees', label: 'Committees' }
 ];
 
 const asList = (res) => res.data.results || res.data || [];

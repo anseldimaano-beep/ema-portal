@@ -96,10 +96,10 @@ const Announcements = () => {
   );
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
+    <div className="page">
       <div className="eyebrow mb-3">Stay Informed</div>
-      <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Announcements &amp; News</h1>
-      <p className="text-gray-600 max-w-2xl mb-8">
+      <h1 className="page-title mb-4">Announcements &amp; News</h1>
+      <p className="page-lead mb-6 sm:mb-8">
         Official updates, session recaps, and important notices from the EMA EMITS Model Government.
       </p>
 
@@ -130,7 +130,7 @@ const Announcements = () => {
       )}
 
       {!loading && !error && filtered.length > 0 && (
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
           {filtered.map((a) => (
             <AnnouncementRow key={a.id} a={a} />
           ))}

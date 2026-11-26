@@ -122,10 +122,10 @@ const Government = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="page">
       <div className="eyebrow mb-3">The Government</div>
-      <h1 className="text-3xl font-bold mb-2">EEMG Model Government</h1>
-      <p className="text-gray-600 mb-10 max-w-2xl">
+      <h1 className="page-title mb-2">EEMG Model Government</h1>
+      <p className="page-lead mb-8 sm:mb-10">
         Executive, senators, representatives, appointed officials, committees, and advisers of the EMA EMITS Model Government, A.Y. 2026-2027.
       </p>
 
@@ -148,7 +148,7 @@ const Government = () => {
       {/* Executive */}
       {active === 'executive' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Executive</h2>
+          <h2 className="section-title mb-6">Executive</h2>
           {executive.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-6">
               {executive.map((o) => (
@@ -170,7 +170,7 @@ const Government = () => {
       {/* Senators */}
       {active === 'senators' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Senators</h2>
+          <h2 className="section-title mb-6">Senators</h2>
           {senators.length > 0 ? (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {senators.map((s) => (
@@ -194,7 +194,7 @@ const Government = () => {
       {/* Representatives */}
       {active === 'representatives' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Representatives</h2>
+          <h2 className="section-title mb-6">Representatives</h2>
           {repGroups.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {repGroups.map((r) => (
@@ -220,7 +220,7 @@ const Government = () => {
       {/* Appointed */}
       {active === 'appointed' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Appointed</h2>
+          <h2 className="section-title mb-6">Appointed</h2>
           {appointed.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-6">
               {appointed.map((o) => (
@@ -242,7 +242,7 @@ const Government = () => {
       {/* Committees */}
       {active === 'committees' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Committees</h2>
+          <h2 className="section-title mb-6">Committees</h2>
           {committees.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {committees.map((c) => {
@@ -267,7 +267,7 @@ const Government = () => {
       {/* Advisers */}
       {active === 'advisers' && (
         <section>
-          <h2 className="text-2xl font-bold mb-6">Advisers</h2>
+          <h2 className="section-title mb-6">Advisers</h2>
           {advisers.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-6">
               {advisers.map((o) => (

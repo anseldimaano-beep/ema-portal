@@ -31,7 +31,7 @@ const YearTabSection = ({ title, placeholder, items }) => {
 
   return (
     <section className="mb-12">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">{title}</h2>
+      <h2 className="section-title mb-4">{title}</h2>
       <div className="flex flex-wrap gap-2 mb-4">
         {YEARS.map((y) => (
           <button
@@ -54,7 +54,7 @@ const YearTabSection = ({ title, placeholder, items }) => {
           </p>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.filter((i) => i.academic_year === active).map((item) => (
             <div key={item.id} className="card-accent p-6">
               <div className="flex items-start justify-between gap-3 mb-2">
@@ -99,12 +99,12 @@ const Project = () => {
   const programs = entries.filter((e) => e.kind === 'program');
 
   return (
-  <div className="max-w-5xl mx-auto px-4 py-16">
+  <div className="page">
     <div className="eyebrow mb-3">The Project &amp; Programs</div>
-    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <h1 className="page-title mb-4">
       About the EMA EMITS Model Government
     </h1>
-    <p className="text-gray-600 max-w-3xl mb-10">
+    <p className="page-lead mb-8 sm:mb-10">
       EEMG is EMA EMITS College's student-run simulation of the Philippine Senate, giving students
       a direct, practical understanding of how legislation is made from the ground up. To know more,
       click here.

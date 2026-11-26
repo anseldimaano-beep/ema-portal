@@ -17,7 +17,7 @@ const FAQPage = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
+    <div className="page">
       <h1 className="text-3xl font-bold mb-8">FAQ</h1>
       {status === 'loading' && (
         <p className="text-gray-500">Loading questions... the server may take a moment to wake up.</p>

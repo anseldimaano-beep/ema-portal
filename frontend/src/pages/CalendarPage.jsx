@@ -4,10 +4,10 @@ import Calendar from '../components/Calendar';
 import calendarImage from '../assets/college_calendar_2026_2027.webp';
 
 const CalendarPage = () => (
-  <div className="max-w-5xl mx-auto px-4 py-16">
+  <div className="page">
     <div className="eyebrow mb-3">Academic Calendar</div>
-    <h1 className="text-3xl font-bold mb-2">Academic Calendar</h1>
-    <p className="text-gray-600 mb-10 max-w-2xl">
+    <h1 className="page-title mb-2">Academic Calendar</h1>
+    <p className="page-lead mb-8 sm:mb-10">
       Session schedules, academic dates, and upcoming events for the EMA EMITS Model Government.
     </p>
 

@@ -29,8 +29,8 @@ const Contact = () => {
     }
   };
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-8">Contact Us</h1>
+    <div className="page">
+      <h1 className="page-title mb-6 sm:mb-8">Contact Us</h1>
       <div className="grid md:grid-cols-2 gap-12">
         <div className="space-y-6">
           <div className="flex items-start space-x-4">

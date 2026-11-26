@@ -17,8 +17,8 @@ const FAQPage = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold mb-8">FAQ</h1>
+    <div className="page">
+      <h1 className="page-title mb-6 sm:mb-8">FAQ</h1>
       {status === 'loading' && (
         <p className="text-gray-500">Loading questions... the server may take a moment to wake up.</p>
       )}
@@ -28,9 +28,11 @@ const FAQPage = () => {
       {status === 'ready' && faqs.length === 0 && (
         <p className="text-gray-600">No questions have been posted yet.</p>
       )}
-      {faqs.map((f) => (
-        <FAQ key={f.id} faq={f} />
-      ))}
+      <div className="grid gap-4 md:grid-cols-2 items-start">
+        {faqs.map((f) => (
+          <FAQ key={f.id} faq={f} />
+        ))}
+      </div>
     </div>
   );
 };

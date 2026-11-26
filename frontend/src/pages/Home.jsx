@@ -21,7 +21,7 @@ const HeroCarousel = ({ slides }) => {
 
   return (
     <div className="bg-gray-50 border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-10 md:py-16 grid md:grid-cols-2 gap-10 items-center">
+      <div className="container-x py-10 md:py-16 grid md:grid-cols-2 gap-10 items-center">
         {/* Left: copy */}
         <div>
           <div className="eyebrow mb-4">Latest Announcements</div>
@@ -115,7 +115,7 @@ const StatsStrip = () => {
 
   return (
     <div className="bg-primary-900 border-b-4 border-accent-400">
-      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+      <div className="container-x py-8 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
         {stats.map((s) => (
           <div key={s.label}>
             <div className="text-3xl md:text-4xl font-extrabold text-white">{s.value}</div>
@@ -192,10 +192,10 @@ const SITE_SECTIONS = [
 ];
 
 const SiteOverviewSection = () => (
-  <div className="max-w-7xl mx-auto px-4 py-16">
+  <div className="page">
     <div className="eyebrow mb-3">On This Site</div>
     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">What you'll find here</h2>
-    <p className="text-gray-600 max-w-3xl mb-10">
+    <p className="page-lead mb-8 sm:mb-10">
       A quick summary of every section of the EMA EMITS Model Government portal.
     </p>
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -239,7 +239,7 @@ const Home = () => {
       <SiteOverviewSection />
 
       {/* Announcements grid */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="page">
         <div className="flex items-end justify-between mb-8">
           <div>
             <div className="eyebrow mb-3">News &amp; Announcements</div>

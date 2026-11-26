@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/api';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Info } from 'lucide-react';
 const Contact = () => {
   const [form, setForm] = useState({
     name: '',
@@ -54,6 +54,17 @@ const Contact = () => {
             <div>
               <h3 className="font-semibold">Email</h3>
               <p className="text-gray-600">eemgcollege@gmail.com</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3 border-l-4 border-accent-500 bg-gray-50 rounded-r-lg p-4">
+            <Info className="h-5 w-5 text-primary-800 mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-sm">Disclaimer</h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Have a concern, suggestion, or question? Just send us a message using the form and the EEMG
+                officers will review it. Please do not include passwords or other sensitive personal
+                information in your message.
+              </p>
             </div>
           </div>
         </div>

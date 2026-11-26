@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
+import PostPhotoGrid from '../components/PostPhotoGrid';
 
 const PROJECT_PILLARS = [
   {
@@ -66,14 +67,17 @@ const YearTabSection = ({ title, placeholder, items }) => {
                 )}
               </div>
               {item.date_label && <p className="text-xs text-gray-500 mb-2">{item.date_label}</p>}
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  loading="lazy"
-                  className="w-full h-40 object-cover rounded-lg mb-3"
-                />
-              )}
+              {(() => {
+                const photos = [
+                  ...(item.image ? [{ src: item.image, caption: item.title }] : []),
+                  ...(item.photos || []).map((p) => ({ src: p.image, caption: p.caption }))
+                ];
+                return photos.length > 0 ? (
+                  <div className="mb-3 rounded-lg overflow-hidden">
+                    <PostPhotoGrid photos={photos} />
+                  </div>
+                ) : null;
+              })()}
               <p className="text-gray-600 text-sm whitespace-pre-line">{item.description}</p>
             </div>
           ))}

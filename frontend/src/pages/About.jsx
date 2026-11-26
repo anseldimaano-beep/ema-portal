@@ -78,17 +78,9 @@ const COLLEGE_TIMELINE = [
   }
 ];
 
-const LEVELS = ['Prep & Kindergarten', 'Elementary', 'Secondary', 'College (CHED)', 'Technical (TESDA)'];
+const LEVELS = ['Prep & Kindergarten', 'Elementary', 'Secondary', 'College (CHED)'];
 
 const HIGHLIGHTS = [
-  {
-    title: 'Campus press',
-    text: 'The Rainbow Times (English) and Pulso ng EMITS (Filipino) have won over 200 press conference recognitions between them.'
-  },
-  {
-    title: 'Theater',
-    text: 'Tanghalan Ngani, the student theater group, stages full productions with costumes, props and lighting.'
-  },
   {
     title: 'College of Education',
     text: 'Education students observe classes in the school\'s own high school department, and most graduates are hired soon after graduation.'

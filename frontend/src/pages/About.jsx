@@ -34,6 +34,20 @@ const CollegeHistory = () => (
       ))}
     </ol>
 
+    {LEADERSHIP.some((p) => p.name) && (
+      <div>
+        <h3 className="font-bold mb-3">School leadership</h3>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {LEADERSHIP.filter((p) => p.name).map((p) => (
+            <div key={p.position} className="border-l-4 border-accent-500 bg-gray-50 rounded-r-lg p-4">
+              <div className="text-xs uppercase tracking-wide text-primary-800 font-semibold">{p.position}</div>
+              <div className="font-semibold mt-1">{p.name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
     <div>
       <h3 className="font-bold mb-2">One campus, kindergarten to college</h3>
       <p className="text-gray-700 mb-3">
@@ -76,6 +90,17 @@ const COLLEGE_TIMELINE = [
     title: 'EMA EMITS Model Government founded',
     text: 'Students gain a self-government body with senators, committees and representative groups.'
   }
+];
+
+// Fill in `name` for each position. Entries with an empty name are hidden
+// from the page automatically, so nothing shows until a name is added.
+const LEADERSHIP = [
+  { position: 'Founder', name: 'Atty. Federico Semilla' },
+  { position: 'School President', name: '' },
+  { position: 'Vice President', name: '' },
+  { position: 'College Dean', name: '' },
+  { position: 'Principal', name: '' },
+  { position: 'Registrar', name: '' }
 ];
 
 const LEVELS = ['Prep & Kindergarten', 'Elementary', 'Secondary', 'College (CHED)'];

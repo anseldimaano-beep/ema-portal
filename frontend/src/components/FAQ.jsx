@@ -1,6 +1,6 @@
 import React from 'react';
 const FAQ = ({ faq }) => (
-  <div className="card mb-4">
+  <div className="card">
     <h3 className="font-bold">{faq.question}</h3>
     <p className="mt-2 text-gray-600">{faq.answer}</p>
   </div>

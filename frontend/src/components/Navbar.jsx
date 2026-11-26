@@ -72,7 +72,7 @@ const Navbar = () => {
     <header className="sticky top-0 z-40 shadow-sm">
       {/* Masthead */}
       <div className="bg-primary-900 text-white border-b-4 border-accent-400">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div className="container-x py-3 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-3 min-w-0">
             <img src={logo} alt="College seal" className="h-11 w-11 object-contain shrink-0" />
             <img src={eemgSeal} alt="EMA EMITS Model Government seal" className="h-11 w-11 object-contain shrink-0" />
@@ -98,7 +98,7 @@ const Navbar = () => {
 
       {/* Nav row */}
       <nav className="hidden md:block bg-white">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+        <div className="container-x flex items-center justify-between">
           <div className="flex items-center gap-8">
             {NAV_ITEMS.map((item) =>
               item.children ? (

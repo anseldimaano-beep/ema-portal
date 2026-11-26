@@ -132,7 +132,7 @@ class FAQManageView(generics.ListCreateAPIView):
 
 class ProjectProgramListView(generics.ListAPIView):
     """Published projects and programs for the Project page (public)."""
-    queryset = ProjectProgram.objects.filter(is_published=True)
+    queryset = ProjectProgram.objects.filter(is_published=True).prefetch_related('photos')
     serializer_class = ProjectProgramSerializer
     permission_classes = [AllowAny]
     pagination_class = None

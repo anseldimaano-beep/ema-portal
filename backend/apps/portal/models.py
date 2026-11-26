@@ -441,6 +441,25 @@ class ProjectProgram(models.Model):
         return f"{self.get_kind_display()}: {self.title} ({self.academic_year})"
 
 
+class ProjectPhoto(models.Model):
+    """Extra photos for a project/program (the main image stays on ProjectProgram)."""
+
+    project = models.ForeignKey(ProjectProgram, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='projects/photos/%Y/%m/')
+    caption = models.CharField(max_length=200, blank=True)
+    order = models.PositiveSmallIntegerField(default=0, help_text='Lower numbers show first.')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'project_photos'
+        ordering = ['order', 'id']
+        verbose_name = 'Photo'
+        verbose_name_plural = 'Photos'
+
+    def __str__(self):
+        return self.caption or f'Photo {self.pk} for project {self.project_id}'
+
+
 class SchoolLeader(models.Model):
     """School leadership (founder, president, etc.) shown on the About page."""
 

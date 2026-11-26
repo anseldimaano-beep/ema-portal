@@ -6,7 +6,7 @@ from django.utils import timezone
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ,
     PageContent, ContactMessage, Senator, Committee, CommitteeMember,
-    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser, ProjectPhoto,
 )
 
 
@@ -182,13 +182,54 @@ class ContactMessageAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at']
 
 
+class ProjectProgramAdminForm(forms.ModelForm):
+    extra_photos = MultipleFileField(
+        required=False,
+        label='Bulk upload photos',
+        help_text='Select 20 or more images at once (Ctrl+A in the file picker selects all). '
+                  'They are added to the gallery in the order of their file names. '
+                  'If an upload is slow or times out, upload in batches of about 20-30.',
+    )
+
+    class Meta:
+        model = ProjectProgram
+        fields = '__all__'
+
+
+class ProjectPhotoInline(admin.TabularInline):
+    model = ProjectPhoto
+    extra = 0
+    fields = ['image', 'caption', 'order']
+
+
 @admin.register(ProjectProgram)
 class ProjectProgramAdmin(admin.ModelAdmin):
     """Projects and programs shown on the Project page."""
-    list_display = ['title', 'kind', 'academic_year', 'status', 'order', 'is_published']
+    list_display = ['title', 'kind', 'academic_year', 'status', 'photo_count', 'order', 'is_published']
     list_filter = ['kind', 'academic_year', 'is_published']
     search_fields = ['title', 'description']
     list_editable = ['order', 'is_published']
+    form = ProjectProgramAdminForm
+    inlines = [ProjectPhotoInline]
+    fieldsets = [
+        (None, {'fields': ['kind', 'academic_year', 'title', 'description', 'date_label', 'status']}),
+        ('Photos', {'fields': ['image', 'extra_photos']}),
+        ('Publishing', {'fields': ['order', 'is_published']}),
+    ]
+
+    @admin.display(description='Photos')
+    def photo_count(self, obj):
+        return obj.photos.count()
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        files = sorted(form.cleaned_data.get('extra_photos') or [], key=lambda f: f.name.lower())
+        if files:
+            last = form.instance.photos.order_by('-order').values_list('order', flat=True).first() or 0
+            ProjectPhoto.objects.bulk_create([
+                ProjectPhoto(project=form.instance, image=f, order=last + i + 1)
+                for i, f in enumerate(files)
+            ])
 
 
 @admin.register(SchoolLeader)

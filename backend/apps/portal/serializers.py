@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage,
-    Senator, Committee, CommitteeMember, ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser,
+    Senator, Committee, CommitteeMember, ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser, ProjectPhoto,
 )
 
 
@@ -149,11 +149,19 @@ class ContactMessageAdminSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at']
 
 
+class ProjectPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectPhoto
+        fields = ['id', 'image', 'caption', 'order']
+
+
 class ProjectProgramSerializer(serializers.ModelSerializer):
+    photos = ProjectPhotoSerializer(many=True, read_only=True)
+
     class Meta:
         model = ProjectProgram
         fields = ['id', 'kind', 'academic_year', 'title', 'description',
-                  'date_label', 'status', 'image', 'order']
+                  'date_label', 'status', 'image', 'photos', 'order']
 
 
 class SchoolLeaderSerializer(serializers.ModelSerializer):

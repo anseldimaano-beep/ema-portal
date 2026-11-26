@@ -8,7 +8,7 @@ from django.conf import settings
 from datetime import timedelta
 from .models import (
     Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee,
-    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser,
 )
 from .email_utils import send_via_resend
 from .serializers import (
@@ -17,7 +17,7 @@ from .serializers import (
     PageContentSerializer, ContactMessageSerializer, ContactMessageAdminSerializer,
     SenatorSerializer, CommitteeSerializer,
     ExecutiveOfficerSerializer, AppointedOfficialSerializer, RepresentativeSerializer,
-    ProjectProgramSerializer, SchoolLeaderSerializer,
+    ProjectProgramSerializer, SchoolLeaderSerializer, AdviserSerializer,
 )
 from apps.accounts.permissions import IsAdmin, IsFacultyOrAdmin
 
@@ -248,6 +248,14 @@ class AppointedOfficialListView(generics.ListAPIView):
     """List active appointed officials (public)."""
     queryset = AppointedOfficial.objects.filter(is_active=True)
     serializer_class = AppointedOfficialSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+
+
+class AdviserListView(generics.ListAPIView):
+    """List active advisers (public)."""
+    queryset = Adviser.objects.filter(is_active=True)
+    serializer_class = AdviserSerializer
     permission_classes = [AllowAny]
     pagination_class = None
 

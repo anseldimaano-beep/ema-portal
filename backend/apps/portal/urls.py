@@ -33,6 +33,7 @@ urlpatterns = [
     # Executive, appointed officials, representatives
     path('executive/', views.ExecutiveOfficerListView.as_view(), name='executive-list'),
     path('appointed/', views.AppointedOfficialListView.as_view(), name='appointed-list'),
+    path('advisers/', views.AdviserListView.as_view(), name='adviser-list'),
     path('representatives/', views.RepresentativeListView.as_view(), name='representative-list'),
 
     # Projects & programs

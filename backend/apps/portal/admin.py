@@ -6,7 +6,7 @@ from django.utils import timezone
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ,
     PageContent, ContactMessage, Senator, Committee, CommitteeMember,
-    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser,
 )
 
 
@@ -152,6 +152,14 @@ class ExecutiveOfficerAdmin(PhotoPreviewMixin, admin.ModelAdmin):
 
 @admin.register(AppointedOfficial)
 class AppointedOfficialAdmin(PhotoPreviewMixin, admin.ModelAdmin):
+    list_display = ['photo_preview', 'name', 'position', 'term', 'order', 'is_active']
+    list_filter = ['term', 'is_active']
+    search_fields = ['name', 'position']
+    list_editable = ['order', 'is_active']
+
+
+@admin.register(Adviser)
+class AdviserAdmin(PhotoPreviewMixin, admin.ModelAdmin):
     list_display = ['photo_preview', 'name', 'position', 'term', 'order', 'is_active']
     list_filter = ['term', 'is_active']
     search_fields = ['name', 'position']

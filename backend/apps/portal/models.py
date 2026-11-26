@@ -316,6 +316,23 @@ class AppointedOfficial(GovernmentOfficial):
         return f"{self.name} ({self.position})"
 
 
+class Adviser(GovernmentOfficial):
+    """Advisers of the Model Government, shown on the Government page."""
+
+    position = models.CharField(
+        max_length=150, default='Adviser', help_text='e.g. Adviser, Co-Adviser, Technical Adviser'
+    )
+
+    class Meta:
+        db_table = 'advisers'
+        ordering = ['order', 'id']
+        verbose_name = 'Adviser'
+        verbose_name_plural = 'Advisers'
+
+    def __str__(self):
+        return f"{self.name} ({self.position})"
+
+
 class Representative(GovernmentOfficial):
     """A representative, listed under their group on the Government page."""
 

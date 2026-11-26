@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ, PageContent, ContactMessage,
-    Senator, Committee, CommitteeMember, ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader,
+    Senator, Committee, CommitteeMember, ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader, Adviser,
 )
 
 
@@ -101,6 +101,12 @@ class ExecutiveOfficerSerializer(serializers.ModelSerializer):
 class AppointedOfficialSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppointedOfficial
+        fields = ['id', 'name', 'photo', 'position', 'term', 'order']
+
+
+class AdviserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Adviser
         fields = ['id', 'name', 'photo', 'position', 'term', 'order']
 
 

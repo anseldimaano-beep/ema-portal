@@ -6,7 +6,7 @@ from django.utils import timezone
 from .models import (
     Announcement, AnnouncementPhoto, AcademicCalendar, FAQ,
     PageContent, ContactMessage, Senator, Committee, CommitteeMember,
-    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader,
 )
 
 
@@ -180,4 +180,13 @@ class ProjectProgramAdmin(admin.ModelAdmin):
     list_display = ['title', 'kind', 'academic_year', 'status', 'order', 'is_published']
     list_filter = ['kind', 'academic_year', 'is_published']
     search_fields = ['title', 'description']
+    list_editable = ['order', 'is_published']
+
+
+@admin.register(SchoolLeader)
+class SchoolLeaderAdmin(admin.ModelAdmin):
+    """School leadership shown on the About page."""
+    list_display = ['position', 'name', 'order', 'is_published']
+    list_filter = ['is_published']
+    search_fields = ['position', 'name']
     list_editable = ['order', 'is_published']

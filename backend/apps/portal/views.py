@@ -8,7 +8,7 @@ from django.conf import settings
 from datetime import timedelta
 from .models import (
     Announcement, AcademicCalendar, FAQ, PageContent, ContactMessage, Senator, Committee,
-    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram,
+    ExecutiveOfficer, AppointedOfficial, Representative, ProjectProgram, SchoolLeader,
 )
 from .email_utils import send_via_resend
 from .serializers import (
@@ -17,7 +17,7 @@ from .serializers import (
     PageContentSerializer, ContactMessageSerializer, ContactMessageAdminSerializer,
     SenatorSerializer, CommitteeSerializer,
     ExecutiveOfficerSerializer, AppointedOfficialSerializer, RepresentativeSerializer,
-    ProjectProgramSerializer,
+    ProjectProgramSerializer, SchoolLeaderSerializer,
 )
 from apps.accounts.permissions import IsAdmin, IsFacultyOrAdmin
 
@@ -138,6 +138,16 @@ class ProjectProgramListView(generics.ListAPIView):
     pagination_class = None
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['kind', 'academic_year']
+
+
+# ==================== SCHOOL LEADERSHIP ====================
+
+class SchoolLeaderListView(generics.ListAPIView):
+    """Published school leadership for the About page (public)."""
+    queryset = SchoolLeader.objects.filter(is_published=True)
+    serializer_class = SchoolLeaderSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
 
 
 # ==================== PAGE CONTENT ====================

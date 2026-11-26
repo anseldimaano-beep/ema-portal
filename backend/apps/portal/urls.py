@@ -38,6 +38,9 @@ urlpatterns = [
     # Projects & programs
     path('projects/', views.ProjectProgramListView.as_view(), name='project-program-list'),
 
+    # School leadership
+    path('leadership/', views.SchoolLeaderListView.as_view(), name='school-leader-list'),
+
     # Pages
     path('pages/<str:page>/', views.PageContentView.as_view(), name='page-content'),
     path('pages/manage/', views.PageContentManageView.as_view(), name='page-manage'),

@@ -422,3 +422,25 @@ class ProjectProgram(models.Model):
 
     def __str__(self):
         return f"{self.get_kind_display()}: {self.title} ({self.academic_year})"
+
+
+class SchoolLeader(models.Model):
+    """School leadership (founder, president, etc.) shown on the About page."""
+
+    position = models.CharField(max_length=150, help_text='e.g. "Founder", "School President"')
+    name = models.CharField(max_length=200)
+    photo = models.ImageField(upload_to='leadership/', blank=True, help_text='Optional photo')
+    order = models.PositiveSmallIntegerField(default=0, help_text='Lower numbers appear first')
+    is_published = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'school_leaders'
+        ordering = ['order', 'id']
+        verbose_name = 'School Leader'
+        verbose_name_plural = 'School Leadership'
+
+    def __str__(self):
+        return f"{self.position}: {self.name}"

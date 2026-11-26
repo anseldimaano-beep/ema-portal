@@ -7,6 +7,13 @@
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: #1f2933;
+    overflow-wrap: break-word;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  img, video, iframe {
+    max-width: 100%;
   }
 }
 
@@ -44,5 +51,23 @@
   .eyebrow::before {
     content: '';
     @apply block w-8 h-[3px] bg-accent-500 rounded-full;
+  }
+
+  /* ---- Uniform layout. Every page, the navbar and the footer share this one
+     container so left/right edges line up at every screen size. ---- */
+  .container-x {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .page {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16;
+  }
+  .page-title {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight;
+  }
+  .page-lead {
+    @apply text-gray-600 max-w-3xl text-sm sm:text-base;
+  }
+  .section-title {
+    @apply text-xl sm:text-2xl font-bold text-gray-900;
   }
 }

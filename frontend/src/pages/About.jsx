@@ -3,11 +3,22 @@ import { useLocation } from 'react-router-dom';
 import { COLLEGE_NAME } from '../utils/constants';
 import PhotoGallery from '../components/PhotoGallery';
 import sealLogo from '../assets/logo.png';
+import api from '../services/api';
 
 // Founded year, motto, and location are taken from the college seal itself.
 // Mission/Vision/Core Values/Hymn belong to the college (EECP) specifically,
 // not the student government body, so they only render under that tab.
-const CollegeHistory = () => (
+const CollegeHistory = () => {
+  const [leaders, setLeaders] = useState([]);
+
+  useEffect(() => {
+    api
+      .get('/portal/leadership/')
+      .then((res) => setLeaders(res.data.results || res.data || []))
+      .catch(() => setLeaders([]));
+  }, []);
+
+  return (
   <div className="space-y-8">
     <div className="space-y-4 text-gray-700 leading-relaxed">
       <p>
@@ -34,14 +45,23 @@ const CollegeHistory = () => (
       ))}
     </ol>
 
-    {LEADERSHIP.some((p) => p.name) && (
+    {leaders.length > 0 && (
       <div>
         <h3 className="font-bold mb-3">School leadership</h3>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {LEADERSHIP.filter((p) => p.name).map((p) => (
-            <div key={p.position} className="border-l-4 border-accent-500 bg-gray-50 rounded-r-lg p-4">
-              <div className="text-xs uppercase tracking-wide text-primary-800 font-semibold">{p.position}</div>
-              <div className="font-semibold mt-1">{p.name}</div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {leaders.map((p) => (
+            <div key={p.id} className="border-t-4 border-primary-800 bg-gray-50 rounded-b-lg overflow-hidden text-center">
+              {p.photo ? (
+                <img src={p.photo} alt={p.name} className="w-full aspect-[4/5] object-cover object-top" />
+              ) : (
+                <div className="w-full aspect-[4/5] bg-primary-50 flex items-center justify-center text-4xl font-display font-bold text-primary-800">
+                  {p.name.split(' ').filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase()}
+                </div>
+              )}
+              <div className="p-3">
+                <div className="font-semibold">{p.name}</div>
+                <div className="text-xs uppercase tracking-wide text-primary-800 font-semibold mt-1">{p.position}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -72,7 +92,8 @@ const CollegeHistory = () => (
       ))}
     </div>
   </div>
-);
+  );
+};
 
 const COLLEGE_TIMELINE = [
   {
@@ -90,17 +111,6 @@ const COLLEGE_TIMELINE = [
     title: 'EMA EMITS Model Government founded',
     text: 'Students gain a self-government body with senators, committees and representative groups.'
   }
-];
-
-// Fill in `name` for each position. Entries with an empty name are hidden
-// from the page automatically, so nothing shows until a name is added.
-const LEADERSHIP = [
-  { position: 'Founder', name: 'Atty. Federico Semilla' },
-  { position: 'School President', name: '' },
-  { position: 'Vice President', name: '' },
-  { position: 'College Dean', name: '' },
-  { position: 'Principal', name: '' },
-  { position: 'Registrar', name: '' }
 ];
 
 const LEVELS = ['Prep & Kindergarten', 'Elementary', 'Secondary', 'College (CHED)'];
